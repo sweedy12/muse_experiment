@@ -9,23 +9,51 @@ var stepsNames= ['pre','instructions','random'];
 var problems_mapping = {'problem_1': 'Prevent mold from growing', 'problem_2': 'Prevent glass from breaking',
 	'problem_3': 'Changing tires', 'problem_4': 'keep food safe'}
 var possible_versions = ['main_v_1','main_v_2','main_v_3','main_v_4', 'main_v_5', 'main_v_6', 'main_v_7', 'main_v_8',
-                         'main_v_9','main_v_10','main_v_11','main_v_12', 'main_v_13', 'main_v_14', 'main_v_15', 'main_v_16']
-var versions_mapping = {'main_v_1': [['problem_1','google', '3'],['problem_2','random'], ['problem_3','engine'], ['problem_4','nothing']],
-						'main_v_2': [['problem_2','google', '2'],['problem_3','random'], ['problem_4','engine'], ['problem_1','nothing']],
-						'main_v_3':	[['problem_3','google', '1'],['problem_4','random'], ['problem_1','engine'], ['problem_2','nothing']],
-						'main_v_4': [['problem_4','google', '0'],['problem_1','random'], ['problem_2','engine'], ['problem_3','nothing']],
-						'main_v_5': [['problem_1','nothing'],['problem_2','google', '2'], ['problem_3','random'], ['problem_4','engine']],
-						'main_v_6': [['problem_2','nothing'],['problem_3','google', '1'], ['problem_4','random'], ['problem_1','engine']],
-						'main_v_7':	[['problem_3','nothing'],['problem_4','google', '0'], ['problem_1','random'], ['problem_2','engine']],
-						'main_v_8': [['problem_4','nothing'],['problem_1','google', '3'], ['problem_2','random'], ['problem_3','engine']],
-                        'main_v_9': [['problem_1','engine'],['problem_2','nothing'], ['problem_3','google', '1'], ['problem_4','random']],
-						'main_v_10': [['problem_2','engine'],['problem_3','nothing'], ['problem_4','google', '0'], ['problem_1','random']],
-						'main_v_11': [['problem_3','engine'],['problem_4','nothing'], ['problem_1','google', '3'], ['problem_2','random']],
-						'main_v_12': [['problem_4','engine'],['problem_1','nothing'], ['problem_2','google', '2'], ['problem_3','random']],
-                        'main_v_13': [['problem_1','random'],['problem_2','engine'], ['problem_3','nothing'], ['problem_4','google', '0']],
-						'main_v_14': [['problem_2','random'],['problem_3','engine'], ['problem_4','nothing'], ['problem_1','google', '3']],
-						'main_v_15': [['problem_3','random'],['problem_4','engine'], ['problem_1','nothing'], ['problem_2','google', '2']],
-						'main_v_16': [['problem_4','random'],['problem_1','engine'], ['problem_2','nothing'], ['problem_3','google', '1']]}
+                         'main_v_9','main_v_10','main_v_11','main_v_12', 'main_v_13', 'main_v_14', 'main_v_15', 'main_v_16',
+			 'main_v_17','main_v_18','main_v_19','main_v_20', 'main_v_21', 'main_v_22', 'main_v_23', 'main_v_24']
+
+// var versions_mapping = {'main_v_1': [['problem_1','google', '3'],['problem_2','random'], ['problem_3','engine'], ['problem_4','nothing']],
+// 						'main_v_2': [['problem_2','google', '2'],['problem_3','random'], ['problem_4','engine'], ['problem_1','nothing']],
+// 						'main_v_3':	[['problem_3','google', '1'],['problem_4','random'], ['problem_1','engine'], ['problem_2','nothing']],
+// 						'main_v_4': [['problem_4','google', '0'],['problem_1','random'], ['problem_2','engine'], ['problem_3','nothing']],
+// 						'main_v_5': [['problem_1','nothing'],['problem_2','google', '2'], ['problem_3','random'], ['problem_4','engine']],
+// 						'main_v_6': [['problem_2','nothing'],['problem_3','google', '1'], ['problem_4','random'], ['problem_1','engine']],
+// 						'main_v_7':	[['problem_3','nothing'],['problem_4','google', '0'], ['problem_1','random'], ['problem_2','engine']],
+// 						'main_v_8': [['problem_4','nothing'],['problem_1','google', '3'], ['problem_2','random'], ['problem_3','engine']],
+//                         'main_v_9': [['problem_1','engine'],['problem_2','nothing'], ['problem_3','google', '1'], ['problem_4','random']],
+// 						'main_v_10': [['problem_2','engine'],['problem_3','nothing'], ['problem_4','google', '0'], ['problem_1','random']],
+// 						'main_v_11': [['problem_3','engine'],['problem_4','nothing'], ['problem_1','google', '3'], ['problem_2','random']],
+// 						'main_v_12': [['problem_4','engine'],['problem_1','nothing'], ['problem_2','google', '2'], ['problem_3','random']],
+//                         'main_v_13': [['problem_1','random'],['problem_2','engine'], ['problem_3','nothing'], ['problem_4','google', '0']],
+// 						'main_v_14': [['problem_2','random'],['problem_3','engine'], ['problem_4','nothing'], ['problem_1','google', '3']],
+// 						'main_v_15': [['problem_3','random'],['problem_4','engine'], ['problem_1','nothing'], ['problem_2','google', '2']],
+// 						'main_v_16': [['problem_4','random'],['problem_1','engine'], ['problem_2','nothing'], ['problem_3','google', '1']]}
+
+var versions_mapping = {'main_v_1': [['problem_1','nothing'],['problem_2','google', '2'], ['problem_3','random'], ['problem_4','engine']],
+			'main_v_2': [['problem_1','nothing'],['problem_3','random'], ['problem_2','google', '2'], ['problem_4','engine']],
+			'main_v_3': [['problem_3','random'], ['problem_1','nothing'], ['problem_2','google', '2'], ['problem_4','engine']],
+			'main_v_4': [['problem_3','random'], ['problem_2','google', '2'], ['problem_1','nothing'], ['problem_4','engine']],
+			'main_v_5': [['problem_2','google', '2'], ['problem_3','random'], ['problem_1','nothing'], ['problem_4','engine']],
+			'main_v_6': [['problem_2','google', '2'], ['problem_1','nothing'], ['problem_3','random'], ['problem_4','engine']],
+			'main_v_7': [['problem_2','nothing'],['problem_3','google', '2'], ['problem_4','random'], ['problem_1','engine']],
+			'main_v_8': [['problem_2','nothing'],['problem_4','random'], ['problem_3','google', '2'], ['problem_1','engine']],
+			'main_v_9': [['problem_4','random'], ['problem_2','nothing'], ['problem_3','google', '2'], ['problem_1','engine']],
+			'main_v_10': [['problem_4','random'], ['problem_3','google', '2'], ['problem_2','nothing'], ['problem_1','engine']],
+			'main_v_11': [['problem_3','google', '2'], ['problem_4','random'], ['problem_2','nothing'], ['problem_1','engine']],
+			'main_v_12': [['problem_3','google', '2'], ['problem_2','nothing'], ['problem_4','random'], ['problem_1','engine']],
+			'main_v_13': [['problem_3','nothing'],['problem_4','google', '0'], ['problem_1','random'], ['problem_2','engine']],
+			'main_v_14': [['problem_3','nothing'],['problem_1','random'], ['problem_4','google', '2'], ['problem_2','engine']],
+			'main_v_15': [['problem_1','random'], ['problem_3','nothing'], ['problem_4','google', '2'], ['problem_2','engine']],
+			'main_v_16': [['problem_1','random'], ['problem_4','google', '2'], ['problem_3','nothing'], ['problem_2','engine']],
+			'main_v_17': [['problem_4','google', '2'], ['problem_1','random'], ['problem_3','nothing'], ['problem_2','engine']],
+			'main_v_18': [['problem_4','google', '2'], ['problem_3','nothing'], ['problem_1','random'], ['problem_2','engine']],
+			'main_v_19': [['problem_4','nothing'],['problem_1','google', '3'], ['problem_2','random'], ['problem_3','engine']],
+			'main_v_20': [['problem_4','nothing'],['problem_2','random'], ['problem_1','google', '2'], ['problem_3','engine']],
+			'main_v_21': [['problem_2','random'], ['problem_4','nothing'], ['problem_1','google', '2'], ['problem_3','engine']],
+			'main_v_22': [['problem_2','random'], ['problem_1','google', '2'], ['problem_4','nothing'], ['problem_3','engine']],
+			'main_v_23': [['problem_1','google', '2'], ['problem_2','random'], ['problem_4','nothing'], ['problem_3','engine']],
+			'main_v_24': [['problem_1','google', '2'], ['problem_4','nothing'], ['problem_2','random'], ['problem_3','engine']]}
+
 var phaseName;
 var chosen_version;
 var chosen_order;
