@@ -5,178 +5,106 @@
 <script language="Javascript">
 document.body.scrollTop = 0;
 document.documentElement.scrollTop = 0;
+
+var condition_num_to_type = {'cond_1': 'purp_only.html', 'cond_2': 'purp_mech.html', 'cond_3': 'purp_abs.html'}
+var new_to_old_cond_mapping = {'graph_1': 'cond_1', 'graph_2': 'cond_2', 'graph_3': 'cond_3', 'graph_4': 'cond_4'}
+
 var stepsNames= ['pre','instructions','random'];
-var problems_mapping = {'problem_1': 'Prevent mold from growing', 'problem_2': 'Prevent glass from breaking',
-	'problem_3': 'Changing tires', 'problem_4': 'keep food safe'}
-var possible_versions = ['main_v_1','main_v_2','main_v_3','main_v_4', 'main_v_5', 'main_v_6', 'main_v_7', 'main_v_8',
-                         'main_v_9','main_v_10','main_v_11','main_v_12', 'main_v_13', 'main_v_14', 'main_v_15', 'main_v_16',
-			 'main_v_17','main_v_18','main_v_19','main_v_20', 'main_v_21', 'main_v_22', 'main_v_23', 'main_v_24']
+var problems_mapping = {'problem_1': 'Dry wet floor', 'problem_2': 'Remind taking medicine',
+	'problem_3': 'Folding laundry', 'problem_4': 'Protect plants'}
 
-// var versions_mapping = {'main_v_1': [['problem_1','google', '3'],['problem_2','random'], ['problem_3','engine'], ['problem_4','nothing']],
-// 						'main_v_2': [['problem_2','google', '2'],['problem_3','random'], ['problem_4','engine'], ['problem_1','nothing']],
-// 						'main_v_3':	[['problem_3','google', '1'],['problem_4','random'], ['problem_1','engine'], ['problem_2','nothing']],
-// 						'main_v_4': [['problem_4','google', '0'],['problem_1','random'], ['problem_2','engine'], ['problem_3','nothing']],
-// 						'main_v_5': [['problem_1','nothing'],['problem_2','google', '2'], ['problem_3','random'], ['problem_4','engine']],
-// 						'main_v_6': [['problem_2','nothing'],['problem_3','google', '1'], ['problem_4','random'], ['problem_1','engine']],
-// 						'main_v_7':	[['problem_3','nothing'],['problem_4','google', '0'], ['problem_1','random'], ['problem_2','engine']],
-// 						'main_v_8': [['problem_4','nothing'],['problem_1','google', '3'], ['problem_2','random'], ['problem_3','engine']],
-//                         'main_v_9': [['problem_1','engine'],['problem_2','nothing'], ['problem_3','google', '1'], ['problem_4','random']],
-// 						'main_v_10': [['problem_2','engine'],['problem_3','nothing'], ['problem_4','google', '0'], ['problem_1','random']],
-// 						'main_v_11': [['problem_3','engine'],['problem_4','nothing'], ['problem_1','google', '3'], ['problem_2','random']],
-// 						'main_v_12': [['problem_4','engine'],['problem_1','nothing'], ['problem_2','google', '2'], ['problem_3','random']],
-//                         'main_v_13': [['problem_1','random'],['problem_2','engine'], ['problem_3','nothing'], ['problem_4','google', '0']],
-// 						'main_v_14': [['problem_2','random'],['problem_3','engine'], ['problem_4','nothing'], ['problem_1','google', '3']],
-// 						'main_v_15': [['problem_3','random'],['problem_4','engine'], ['problem_1','nothing'], ['problem_2','google', '2']],
-// 						'main_v_16': [['problem_4','random'],['problem_1','engine'], ['problem_2','nothing'], ['problem_3','google', '1']]}
+var possible_problems = ['problem_3', 'problem_4'] // TODO here we need to add the problem that we want in the first part of the experiment
+var possible_versions = ['v_1','v_2','v_3','v_4']
 
-var versions_mapping = {'main_v_1': [['problem_1','nothing'],['problem_2','google', '2'], ['problem_3','random'], ['problem_4','engine']],
-			'main_v_2': [['problem_1','nothing'],['problem_3','random'], ['problem_2','google', '2'], ['problem_4','engine']],
-			'main_v_3': [['problem_3','random'], ['problem_1','nothing'], ['problem_2','google', '2'], ['problem_4','engine']],
-			'main_v_4': [['problem_3','random'], ['problem_2','google', '2'], ['problem_1','nothing'], ['problem_4','engine']],
-			'main_v_5': [['problem_2','google', '2'], ['problem_3','random'], ['problem_1','nothing'], ['problem_4','engine']],
-			'main_v_6': [['problem_2','google', '2'], ['problem_1','nothing'], ['problem_3','random'], ['problem_4','engine']],
-			'main_v_7': [['problem_2','nothing'],['problem_3','google', '2'], ['problem_4','random'], ['problem_1','engine']],
-			'main_v_8': [['problem_2','nothing'],['problem_4','random'], ['problem_3','google', '2'], ['problem_1','engine']],
-			'main_v_9': [['problem_4','random'], ['problem_2','nothing'], ['problem_3','google', '2'], ['problem_1','engine']],
-			'main_v_10': [['problem_4','random'], ['problem_3','google', '2'], ['problem_2','nothing'], ['problem_1','engine']],
-			'main_v_11': [['problem_3','google', '2'], ['problem_4','random'], ['problem_2','nothing'], ['problem_1','engine']],
-			'main_v_12': [['problem_3','google', '2'], ['problem_2','nothing'], ['problem_4','random'], ['problem_1','engine']],
-			'main_v_13': [['problem_3','nothing'],['problem_4','google', '0'], ['problem_1','random'], ['problem_2','engine']],
-			'main_v_14': [['problem_3','nothing'],['problem_1','random'], ['problem_4','google', '2'], ['problem_2','engine']],
-			'main_v_15': [['problem_1','random'], ['problem_3','nothing'], ['problem_4','google', '2'], ['problem_2','engine']],
-			'main_v_16': [['problem_1','random'], ['problem_4','google', '2'], ['problem_3','nothing'], ['problem_2','engine']],
-			'main_v_17': [['problem_4','google', '2'], ['problem_1','random'], ['problem_3','nothing'], ['problem_2','engine']],
-			'main_v_18': [['problem_4','google', '2'], ['problem_3','nothing'], ['problem_1','random'], ['problem_2','engine']],
-			'main_v_19': [['problem_4','nothing'],['problem_1','google', '3'], ['problem_2','random'], ['problem_3','engine']],
-			'main_v_20': [['problem_4','nothing'],['problem_2','random'], ['problem_1','google', '2'], ['problem_3','engine']],
-			'main_v_21': [['problem_2','random'], ['problem_4','nothing'], ['problem_1','google', '2'], ['problem_3','engine']],
-			'main_v_22': [['problem_2','random'], ['problem_1','google', '2'], ['problem_4','nothing'], ['problem_3','engine']],
-			'main_v_23': [['problem_1','google', '2'], ['problem_2','random'], ['problem_4','nothing'], ['problem_3','engine']],
-			'main_v_24': [['problem_1','google', '2'], ['problem_4','nothing'], ['problem_2','random'], ['problem_3','engine']]}
+var versions_mapping = {'v_1': ['graph_1'],
+						'v_2': ['graph_2'],
+						'v_3': ['graph_3'],
+						'v_4': ['graph_4']}
 
+var chosen_problem;
 var phaseName;
 var chosen_version;
+var chosen_condition;
 var chosen_order;
 var step=0;   // steps throughout a phase
 var phase=1; // three phases, corresponding to conditions
 var section = 0;
 var mtimer;
-let playGraphWasClicked = false;
 
-const numOfSecondsSelfPart = 300; // 120
-const numOfSecondsInspirationPart = 600; //480
+const numOfSecondsSelfPart = 5; // 120
+const numOfSecondsInspirationPart = 15; //480
 
-var totalSecondsSelfAnswer = 300; // 120
-var totalSecondsWithInspiration = 600; //480
+var totalSecondsSelfAnswer = 5; // 120
+var totalSecondsWithInspiration = 15; //480
 
-var curr_graph_url_problem;
+// var curr_graph_url_problem;
 
-
-	function showSelfBlankLinesAccordingToPhase(){
+	function showInspirationBlankLinesAccordingToPhase(cond){
 		document.getElementById("self_solutions_section1").style.display ="none";
-		document.getElementById("self_solutions_section2").style.display ="none";
-		document.getElementById("self_solutions_section3").style.display ="none";
-		document.getElementById("self_solutions_section4").style.display ="none";
-		let section_number = section+1
-		logCurrentTime("section " + section_number.toString() + " part 1 - answers")
-		document.getElementById("self_solutions_section" + section_number.toString()).style.display ="block";
-	}
-
-	function showInspirationBlankLinesAccordingToPhase(){
 		document.getElementById("inspiration_solutions_section1").style.display ="none";
-		document.getElementById("inspiration_solutions_section2").style.display ="none";
-		document.getElementById("inspiration_solutions_section3").style.display ="none";
-		document.getElementById("inspiration_solutions_section4").style.display ="none";
-
 		document.getElementById("inspiration_box_section_1").style.display ="none";
-		document.getElementById("inspiration_box_section_2").style.display ="none";
-		document.getElementById("inspiration_box_section_3").style.display ="none";
-		document.getElementById("inspiration_box_section_4").style.display ="none";
-
-		let section_number = section+1
-		logCurrentTime("section " + section_number.toString() + " part 2 - answers")
-		document.getElementById("inspiration_solutions_section" + section_number.toString()).style.display ="block";
-		document.getElementById("inspiration_box_section_" + section_number.toString()).style.display ="block";
-		// load_local_file("links.txt")
+		if (cond==="cond_4"){
+			showEmptyConditionBlankLines()
+		}
+		else {
+			let section_number = section+1
+			logCurrentTime("section " + section_number.toString() + " part 2 - answers")
+			document.getElementById("inspiration_solutions_section" + section_number.toString()).style.display ="block";
+			document.getElementById("inspiration_box_section_" + section_number.toString()).style.display ="block";
+		}
 	}
 
-	function skipSelfSectionAndMove(){
-		document.getElementById("buttonNextAfterMinTimeSelf").style.display ="none"
-		clearInterval(mtimer);
-		moveToInspirationSection()
+	function showEmptyConditionBlankLines(){
+		    document.getElementById("self_solutions_section1").style.display ="block";
+			let section_number = section+1
+			logCurrentTime("section " + section_number.toString() + " part 2 - answers")
 	}
 
-	// function skipInspSectionAndMove(){
-	// 	document.getElementById("buttonNextAfterMinTimeInsp").style.display ="none"
-	// 	clearInterval(mtimer);
-	// 	if (section+1<=3){
-	// 		moveToNextSection()
-	// 	}
-	// 	else {
-	// 		submitTask()
-	// 	}
-	// }
-
-		function moveToInspirationSection()
-	{
+		function moveToInspirationSection(){
 		// go to the top of the page
 		document.body.scrollTop = 0;
 		document.documentElement.scrollTop = 0;
-
-		// hide the self answers section
-		document.getElementById("self_solutions_instructions").style.display ="none";
-		document.getElementById("self_solutions_blank_lines").style.display ="none";
 
 		// show the inspirations section
 		document.getElementById("inspiration_based_solutions_instructions").style.display ="block"
 
 		// hide all non relevant sections
-		document.getElementById("google").style.display ="none"
-		document.getElementById("random").style.display ="none"
-		document.getElementById("engine").style.display ="none"
-		document.getElementById("nothing").style.display ="none"
+		document.getElementById("cond_2").style.display ="none"
+		document.getElementById("cond_3").style.display ="none"
+		document.getElementById("cond_1").style.display ="none"
+		document.getElementById("cond_4").style.display ="none"
 
 		// show the correct section
-		document.getElementById(chosen_order[section][1]).style.display ="block"
-		console.log(chosen_order[section][1])
-		if (chosen_order[section][1] === "random") {
-			logCurrentTime("section " + (section+1).toString() + " part 2 - random setting")
-			console.log("texts_" + section.toString())
-			document.getElementById("texts_" + (section+1).toString()).style.display = "block"
+		document.getElementById(chosen_condition).style.display ="block"
+		console.log(chosen_condition)
+		if (chosen_condition === "cond_3") {
+			logCurrentTime("section " + (section+1).toString() + " part 2 - cond_3 setting")
+			console.log("cond_3_" + section.toString())
+			let cond_element = document.getElementById("cond_3_" + (section+1).toString())
+			cond_element.style.display = "block"
+			cond_element.lastChild.attributes.src.value = "./graph_files/" + chosen_problem + "/" + condition_num_to_type["cond_3"]
 			document.getElementById("inspiration_box_" + (section+1).toString() + "_text_line").style.display = "block"
 		}
-		if (chosen_order[section][1] === "google"){
-			logCurrentTime("section " + (section+1).toString() + " part 2 - google setting")
-			console.log("links_" + (section+1).toString() + (chosen_order[section][2]))
-			document.getElementById("links_" + (section+1).toString() + "_" + (chosen_order[section][2])).style.display = "block"
+		if (chosen_condition === "cond_2"){
+			logCurrentTime("section " + (section+1).toString() + " part 2 - cond_2 setting")
+			console.log("cond_2_" + (section+1).toString())
+			let cond_element = document.getElementById("cond_2_" + (section+1).toString())
+			cond_element.style.display = "block"
+			cond_element.lastChild.attributes.src.value = "./graph_files/" + chosen_problem + "/" + condition_num_to_type["cond_2"]
 			document.getElementById("inspiration_box_" + (section+1).toString() + "_links_line").style.display = "block"
 		}
-		if (chosen_order[section][1] === "nothing"){
-			logCurrentTime("section " + (section+1).toString() + " part 2 - nothing setting")
-			document.getElementById("nothing_" + (section+1).toString()).style.display = "block"
-			document.getElementById("specific_source_" + (section+1).toString()).style.display ="none"
-			for (let i = 1; i < 11; i++) {
-				console.log("inspiration_explain_" + (section+1).toString() + "_" + i.toString())
-				// document.getElementById("inspiration_explain_" + (section+1).toString() + "_" + i.toString()).innerText = "my own solution"
-				document.getElementById("inspiration_explain_" + (section+1).toString() + "_" + i.toString()).cols = 80
-				document.getElementById("inspiration_solution_" + (section+1).toString() + "_" + i.toString()).cols = 80
-			}
-			// document.getElementById("more_inspiration_explain_" + (section+1).toString()).innerText = "my own solution"
-			document.getElementById("more_inspiration_explain_" + (section+1).toString()).cols = 80
-			document.getElementById("more_inspiration_solutions_" + (section+1).toString()).cols = 80
-		}
-		if (chosen_order[section][1] === "engine"){
-			logCurrentTime("section " + (section+1).toString() + " part 2 - engine setting")
+		if (chosen_condition === "cond_1"){
+			logCurrentTime("section " + (section+1).toString() + " part 2 - cond_1 setting")
 			document.getElementById("inspiration_box_" + (section+1).toString() + "_graph_line").style.display = "block"
-			document.getElementById("engine_" + (section+1).toString()).style.display = "block"
+			let cond_element = document.getElementById("cond_1_" + (section+1).toString())
+			cond_element.style.display = "block"
+			cond_element.lastChild.attributes.src.value = "./graph_files/" + chosen_problem + "/" + condition_num_to_type["cond_1"]
 		}
-		// }
-
-
-		// display right number of section
-		document.getElementById("partNumber").innerHTML = 2
+		if (chosen_condition === "cond_4"){
+			logCurrentTime("section " + (section+1).toString() + " part 2 - cond_4 setting")
+		}
 	}
-	
+
 
 window.onload = function() {document.getElementById('submitButton'); }
 
@@ -185,7 +113,25 @@ window.onload = function() {document.getElementById('submitButton'); }
 			let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 			let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 			let dateTime = date + ' ' + time;
-			document.getElementById('logger').value += "Entering " + section_name + " time: " + dateTime + '\n';
+			writeToLogger("Entering " + section_name + " time: " + dateTime)
+	}
+
+	function writeToLogger(log){
+		document.getElementById('logger').value += log + '\n'
+	}
+
+	function clickOnFirstInstructionButton(){
+			logCurrentTime("first instructions section")
+			if (document.getElementById("prolific_id").value === ""){
+				alert("In order to continue, you should insert a Prolific user id number.")
+				return
+			}
+			document.body.scrollTop = 0;
+			document.documentElement.scrollTop = 0;
+		    phaseName= stepsNames[step+1]
+		    document.getElementById("registration_section").style.display ="none";
+			showSection("pre");
+			step += 1
 	}
 
 	function clickOnInitialNextButton(){
@@ -209,50 +155,28 @@ window.onload = function() {document.getElementById('submitButton'); }
 	}
 
 	function goToMainSection(){
-			logCurrentTime("section 1 part 1");
+			logCurrentTime("condition section");
 		    document.body.scrollTop = 0;
 			document.documentElement.scrollTop = 0;
 		    phaseName= stepsNames[step+1]
 		    document.getElementById("instructions2").style.display ="none";
+
+			document.getElementById("banner").innerHTML = "Find solutions using an inspiration source"
+			if (chosen_condition === 'cond_4'){
+				document.getElementById("banner").innerHTML = "Find solutions yourself"
+			}
 			showSection("main");
+			moveToInspirationSection()
 			step += 1
 	}
 
-	function markPlayGraphAsClicked(){
-		playGraphWasClicked = true
-	}
-
-	function showEngineInspirationSection(){
-		// read the log for entering the link of the play graph
-		if (playGraphWasClicked===true){
-			// only if it's pressed, move on
-			showInspirationSection()
-		}
-		else {
-			alert("In order to continue, you should first press the link of the graph from the video and try it out.")
-		}
-	}
-
-	function showInspirationSection(){
-			// reset_times()
-		    document.getElementById("engine_link_1").href = "http://inspiration2.researchsoftwarehosting.org/call-backend-api?user_problem="+curr_graph_url_problem + "&graph_name=1000000";
+	function showInspirationSection(cond){
 			document.getElementById('scroll_inspiration_solutions').scrollTop = 0;
 			showSection("inspiration_based_solutions_blank_lines")
-			showInspirationBlankLinesAccordingToPhase()
-			document.getElementById("button3" + chosen_order[section][1]).style.display ="none";
+			showInspirationBlankLinesAccordingToPhase(cond)
+			document.getElementById("button3" + new_to_old_cond_mapping[chosen_order[section]]).style.display ="none";
 			mtimer = setInterval(myTimerInspirationAnswer, 1000)
 			document.getElementById('scroll_inspiration_solutions').scrollTop = 0;
-	}
-
-	function showSelfIdeasSection(){
-		    // reset_times()
-			// document.getElementById("timer_self").style.display ="block"
-		    document.getElementById('scroll_self_solutions').scrollTop = 0;
-			showSection("self_solutions_blank_lines")
-			showSelfBlankLinesAccordingToPhase()
-			document.getElementById("button2").style.display ="none";
-			mtimer = setInterval(myTimerSelfAnswer, 1000)
-			document.getElementById('scroll_self_solutions').scrollTop = 0;
 	}
 
     function showSection(nameToShow)
@@ -261,105 +185,10 @@ window.onload = function() {document.getElementById('submitButton'); }
         document.getElementById(nameToShow).style.display ="block";
 
    }
-  
-  function logClick(buttonNum)
-  {
-  
-    // show the right panel
-	document.getElementById("inspiration_" + phase.toString()  + "_" + phaseName + "_1").style.display ="none";
-	document.getElementById("inspiration_" + phase.toString()  + "_" + phaseName + "_2").style.display ="none";
-	document.getElementById("inspiration_" + phase.toString()  + "_" + phaseName + "_3").style.display ="none";
-	document.getElementById("inspiration_" + phase.toString()  + "_" + phaseName + "_4").style.display ="none";
-	
-  
-	if (buttonNum>0)
-	{
-		document.getElementById("inspiration_" + phase.toString()  + "_" + phaseName + "_" + buttonNum.toString()).style.display ="block";
-		document.getElementById("inspirebutton1").innerHTML= "Page 1";
-		document.getElementById("inspirebutton2").innerHTML= "Page 2";
-		document.getElementById("inspirebutton3").innerHTML= "Page 3";
-		document.getElementById("inspirebutton4").innerHTML= "Page 4";
-		document.getElementById("inspirebutton" + buttonNum.toString()).innerHTML= "<u>Page " + buttonNum.toString() + "</u>";
-	
-	}
-
-	var i;
-	var cnt=0; // how many non-empty
-	var lengths='';
-	for (i = 1; i<=25; i++)
-	{
-		lengths+= document.getElementById('idea_' + phase + '_' + i).value.length.toString() + ',';
-		  if (document.getElementById('idea_' + phase + '_' + i).value.length > 0) {
-			  cnt++;
-		  }
-	}
-    }
 
 </script>
 
 <script>
-
-function updateUser(st)
-{
-	document.getElementById("banner").innerHTML= st;
-	alert(st);
-}
-
-function reset_times(){
-	totalSecondsWithInspiration = numOfSecondsInspirationPart;
-	totalSecondsSelfAnswer = numOfSecondsSelfPart;
-	// document.getElementById("timer_self").innerHTML = 'you have ' + totalSecondsSelfAnswer + ' seconds left';
-	// document.getElementById("timer_inspiration").innerHTML = 'you have ' + totalSecondsWithInspiration + ' seconds left';
-	document.getElementById("timer_self").innerHTML = '';
-	document.getElementById("timer_inspiration").innerHTML = '';
-}
-
-function moveToNextSection() {
-	section++;
-
-	logCurrentTime("section " + (section+1).toString() + " part 1")
-
-	// reset times
-	reset_times()
-	console.log(section)
-
-	// change problem
-	document.getElementById("problem_1").innerHTML = problems_mapping[chosen_order[section][0]];
-	curr_graph_url_problem = problems_mapping[chosen_order[section][0]].replace(" ", "%20")
-	document.getElementById("engine_link_1").href = "http://inspiration2.researchsoftwarehosting.org/call-backend-api?user_problem="+curr_graph_url_problem + "&graph_name=1000000"
-	document.getElementById("engine_link_2").href = "http://inspiration2.researchsoftwarehosting.org/call-backend-api?user_problem="+curr_graph_url_problem + "&graph_name=1000000"
-	document.getElementById("engine_link_3").href = "http://inspiration2.researchsoftwarehosting.org/call-backend-api?user_problem="+curr_graph_url_problem + "&graph_name=1000000"
-	document.getElementById("engine_link_4").href = "http://inspiration2.researchsoftwarehosting.org/call-backend-api?user_problem="+curr_graph_url_problem + "&graph_name=1000000"
-	document.getElementById("partNumber").innerHTML = 1
-	var new_section = section+1
-	document.getElementById("banner").innerHTML = "Section " + new_section + " out of 4"
-
-	// show new instructions
-	document.getElementById("self_solutions_instructions").style.display ="block"
-	document.getElementById("button2").style.display = "block"
-
-	// remove inspirations from last phase
-	document.getElementById("inspiration_based_solutions_blank_lines").style.display ="none"; // blank lines
-	document.getElementById("inspiration_based_solutions_instructions").style.display ="none"; // instructions inspiration
-}
-
-function myTimerSelfAnswer() {
-    document.getElementById("timer_self").innerHTML = 'you have ' + totalSecondsSelfAnswer + ' seconds left';
-	totalSecondsSelfAnswer--;
-	
-	if (totalSecondsSelfAnswer<0)
-	{
-		clearInterval(mtimer);
-		document.getElementById("demo").innerHTML = 'Time up!';
-		// document.getElementById("timer_self").style.display ="none"
-		// document.getElementById("buttonNextAfterMinTimeSelf").style.display ="none"
-		moveToInspirationSection()
-	}
-
-	else if (totalSecondsSelfAnswer<120){
-		// document.getElementById("buttonNextAfterMinTimeSelf").style.display ="block"
-	}
-}
 
 function submitTask(){
 
@@ -368,13 +197,14 @@ function submitTask(){
 	// turn off last elements
 	document.getElementById("inspiration_based_solutions_instructions").style.display ="none";
 	document.getElementById("inspiration_based_solutions_blank_lines").style.display ="none"; // blank lines
-	document.getElementById("self_solutions_instructions").style.display ="none";
-	document.getElementById("self_solutions_blank_lines").style.display ="none";
+	// document.getElementById("self_solutions_instructions").style.display ="none";
+	// document.getElementById("self_solutions_blank_lines").style.display ="none";
 	document.getElementById("question_instruction").style.display ="none";
 	document.getElementById("main_table").style.display ="none";
-	document.getElementById("partNumber").style.display ="none";
+	// document.getElementById("partNumber").style.display ="none";
 
 	// show submit elements
+	document.getElementById("banner").innerHTML = "Demographic survey"
 	document.getElementById("submit").style.display ="block";
 
 }
@@ -387,14 +217,7 @@ function myTimerInspirationAnswer() {
 	{
 		clearInterval(mtimer);
 		document.getElementById("demo").innerHTML = 'Time up!';
-		// document.getElementById("buttonNextAfterMinTimeInsp").style.display ="none";
-
-		if (section+1<=3){
-			moveToNextSection()
-		}
-		else {
-			submitTask()
-		}
+		submitTask()
 	}
 	else if (totalSecondsWithInspiration<300){
 		// document.getElementById("buttonNextAfterMinTimeInsp").style.display ="block";
@@ -408,7 +231,29 @@ function myTimerInspirationAnswer() {
 	<div class="col-xs-12 col-md-12">
 		<textarea cols="40" id="logger" name="entry.247256415" rows="5" style="display:none">task logs:</textarea>
 	</div>
-<div id="pre" style="margin:30px 50px 20px 50px; font-family: Tahoma,serif; font-size: 18px"><br />
+	<div class="col-xs-12 col-md-12">
+		<textarea cols="40" id="prolific_exp_num" name="entry.1687743065" rows="5" style="display:none">00000</textarea>
+	</div>
+
+<div id="registration_section" style="margin:30px 50px 20px 50px; font-family: Tahoma,serif; font-size: 18px"><br />
+<br />
+<br />
+<br />
+
+<p align="justify">
+
+	<div id="registration" style="background-color:paleturquoise; margin-top: -4%" width="100%">Registration</div>
+	<br/>
+	<br/>
+
+	In order to start the task, please enter you Prolific user id:&nbsp;&nbsp;<textarea cols="40" id="prolific_id" name="entry.1592742615" rows="1.5"></textarea>
+	<br/>
+	<br/>
+
+<input name="buttonRegistration" onclick="clickOnFirstInstructionButton()" type="button" style="font-family: Tahoma,serif; font-size: 18px" value="Continue to the experiment instructions!" /></div>
+
+
+<div id="pre" style="display:none;margin:30px 50px 20px 50px; font-family: Tahoma,serif; font-size: 18px"><br />
 <br />
 <br />
 <br />
@@ -419,7 +264,7 @@ function myTimerInspirationAnswer() {
 	<br/>
 	<br/>
 
-	In this experiment we ask you to find <b>original solutions</b> to problems.<br/>
+	In this experiment we ask you to find <font color="#006400"><b>original solutions</b></font> to problems.<br/>
 	What do we mean by original solutions? Let's look at an example:
     <br />
     <br />
@@ -453,29 +298,24 @@ function myTimerInspirationAnswer() {
 		<br/>
 		<br/>
 
-		During the experiment we will show you four different <font color="#9932cc"><b>problems</b></font>.
-		For each problem, we will ask you to think of solutions in two phases:
+		During the experiment we will show you a single <font color="#9932cc"><b>problem</b></font>.
+		Then, we will ask you to think of solutions to that problem.
 	    <br />
 		<br />
-	1. First, we will give you <b>5 minutes</b> to think about solutions to the
-		<font color="#9932cc"><b>problem</b></font> yourself.
+		To help you, we might show you an <font color="#00008b"><b>inspiration source</b></font>.
 		<br/>
-	2. Second, we will show you an <font color="#00008b"><b>inspiration source</b></font>.
-		The inspirations will take different forms throughout the experiment – they can be links,
-		product descriptions, etc.
-		<br/>
-		The inspirations <emph>might</emph> help you think of new solutions
+		The inspiration <emph>might</emph> help you think of new solutions
 		(but don’t worry if they don’t, you don’t have to use them).
-		You will have <b>10 minutes</b> to find solutions in this part.
+		You will have <b>10 minutes</b> to find solutions.
 	<br />
 	<br />
 	<u>The output of this task:</u>
-		During this task, you will be asked in each part to fill in a table with
+		During this task, you will be asked to fill in a table with
 		(1) your <font color="#006400"><b>original solutions</b></font>,
 		(2) an <b>explanation of what you were inspired by</b>, and
 		(3) the <font color="#00008b"><b>inspiration source id.</b></font>
 		(Inspirations have id numbers assigned to them).
-		In the first phase (no inspiration given), you do not need to fill in an id.
+		In case you didn't use an inspiration source for your solution, you do not need to fill in an id.
 		<br/>
 		<br/>
 		For example, the answers from the example above would look this:
@@ -499,10 +339,10 @@ function myTimerInspirationAnswer() {
 		<br />
 		</td>
 		<td colspan="1" width="40%">
-		Specific inspiration source 1:<br/><textarea style="color: royalblue" readonly cols="40" id="example_insnp_num_1" name="example_insnp_num_1" rows="3">55</textarea><br />
-		Specific inspiration source 2:<br/><textarea style="color: royalblue" readonly cols="40" id="example_insnp_num_2" name="example_insnp_num_2" rows="3">65, 76</textarea><br />
-		Specific inspiration source 3:<br/><textarea style="color: royalblue" readonly cols="40" id="example_insnp_num_3" name="example_insnp_num_3" rows="3">99</textarea><br />
-		Specific inspiration source 4:<br/><textarea style="color: royalblue" readonly cols="40" id="example_insnp_num_4" name=example_insnp_num_4" rows="3">11, 22</textarea><br />
+		Inspiration source id 1:<br/><textarea style="color: royalblue" readonly cols="40" id="example_insnp_num_1" name="example_insnp_num_1" rows="3">55</textarea><br />
+		Inspiration source id 2:<br/><textarea style="color: royalblue" readonly cols="40" id="example_insnp_num_2" name="example_insnp_num_2" rows="3">65, 76</textarea><br />
+		Inspiration source id 3:<br/><textarea style="color: royalblue" readonly cols="40" id="example_insnp_num_3" name="example_insnp_num_3" rows="3">99</textarea><br />
+		Inspiration source id 4:<br/><textarea style="color: royalblue" readonly cols="40" id="example_insnp_num_4" name=example_insnp_num_4" rows="3">11, 22</textarea><br />
 		<br />
 		</td>
 		</tr>
@@ -511,20 +351,9 @@ function myTimerInspirationAnswer() {
 		</div>
 		<br />
 		Please try to think hard and be creative!<br />
-	    We ask you to use the inspiration source exactly as you are instructed
-	    (every inspiration source will have instructions).
+	    We ask you to use the inspiration source exactly as you are instructed.
     	<br />
 		<br />
-<!--		For your convenience, here is the full flow of the experiment, visually illustrated:-->
-<!--		<br />-->
-<!--		<br />-->
-<!--		<img src="flow.png" style="width: 900px; height: 500px">-->
-<!--		<br />-->
-<!--		<br />-->
-<!--		Overall, <b>total amount of time required to answer the survey is around <**70**> minutes.</b>-->
-<!--		Please do not start the task if you do not have the time.-->
-<!--		<br/>-->
-<!--		<br/>-->
         <input name="buttonpre2" onclick="clickOnInitialNext2Button()" type="button"
 			   style="font-family: Tahoma,serif; font-size: 18px" value="Continue to the next instructions!" /></div>
 
@@ -537,89 +366,40 @@ function myTimerInspirationAnswer() {
 	<div id="banner_instruction_3" style="background-color:paleturquoise; margin-top: -4%" width="100%">Instructions page 3</div>
 	<br/>
 	<br/>
-	For your convenience, here is the full flow of the experiment, visually illustrated:
-		<br />
-		<br />
-		<img src="flow_2.png" style="width: 900px; height: 500px">
-		<br />
-		<br />
-		Overall, <b>total amount of time required to answer the survey is around <**70**> minutes.</b>
+		Overall, <b>total amount of time required to answer the survey is around <**15**> minutes.</b>
 		Please do not start the task if you do not have the time.
 		<br/>
 		<br/>
-
-<!--	<u>The output of this task:</u>-->
-<!--		During this task, you will be asked in each part to fill in a table with-->
-<!--		(1) your <font color="#006400"><b>original solutions</b></font>,-->
-<!--		(2) an <b>explanation of what you were inspired by</b>, and-->
-<!--		(3) the <font color="#00008b"><b>inspiration source id.</b></font>-->
-<!--		(Inspirations have id numbers assigned to them).-->
-<!--		In the first phase (no inspiration given), you do not need to fill in an id.-->
-<!--		<br/>-->
-<!--		<br/>-->
-<!--		For example, the answers from the example above would look this:-->
-
-<!--	<div id="example_solutions_inspirations" style="display:block">-->
-<!--		<table style="border: 1px solid black">-->
-<!--		<tbody>-->
-<!--		<tr style="border:2px solid #aaa;">-->
-<!--		<td colspan="1" width="40%">-->
-<!--		Solution 1:<br/><textarea style="color: royalblue" readonly cols="40" id="example_1" name="example_1" rows="3">Hair drying machine: a machine that spins your hair until it is dry</textarea><br />-->
-<!--		Solution 2:<br/><textarea style="color: royalblue" readonly cols="40" id="example_2" name="example_1" rows="3">A hair spray that has drying qualities</textarea><br />-->
-<!--		Solution 3:<br/><textarea style="color: royalblue" readonly cols="40" id="example_3" name="example_1" rows="3">A heating hat: a hat with a heating mechanism that you put on top of your head.</textarea><br />-->
-<!--		Solution 4:<br/><textarea style="color: royalblue" readonly cols="40" id="example_4" name="example_1" rows="3">Using a regular leaf blower to dry your hair</textarea><br />-->
-<!--		<br />-->
-<!--		</td>-->
-<!--		<td colspan="1" width="40%">-->
-<!--		What inspired you 1:<br/><textarea style="color: royalblue" readonly cols="40" id="example_insp_1" name="example_insp_1" rows="3">A clothes dryer spins the clothes to dry them. I thought that maybe a similar idea can work for hair</textarea><br />-->
-<!--		What inspired you 2:<br/><textarea style="color: royalblue" readonly cols="40" id="example_insp_2" name="example_insp_2" rows="3">I was inspired by a nail polish dryer: you spray it on your nails and the nail polish gets dry faster.</textarea><br />-->
-<!--		What inspired you 3:<br/><textarea style="color: royalblue" readonly cols="40" id="example_insp_3" name="example_insp_3" rows="3">Looking on a heating blanket maid me think why no using the same mechanism to heat the head. This may result with the hair getting dry faster.</textarea><br />-->
-<!--		What inspired you 4:<br/><textarea style="color: royalblue" readonly cols="40" id="example_insp_4" name="example_insp_4" rows="3">I saw a text about leaf blowers. the blower circulates the air, similar to a natural wind which dries the hair</textarea><br />-->
-<!--		<br />-->
-<!--		</td>-->
-<!--		<td colspan="1" width="40%">-->
-<!--		Specific inspiration source 1:<br/><textarea style="color: royalblue" readonly cols="40" id="example_insnp_num_1" name="example_insnp_num_1" rows="3">55</textarea><br />-->
-<!--		Specific inspiration source 2:<br/><textarea style="color: royalblue" readonly cols="40" id="example_insnp_num_2" name="example_insnp_num_2" rows="3">65, 76</textarea><br />-->
-<!--		Specific inspiration source 3:<br/><textarea style="color: royalblue" readonly cols="40" id="example_insnp_num_3" name="example_insnp_num_3" rows="3">99</textarea><br />-->
-<!--		Specific inspiration source 4:<br/><textarea style="color: royalblue" readonly cols="40" id="example_insnp_num_4" name=example_insnp_num_4" rows="3">11, 22</textarea><br />-->
-<!--		<br />-->
-<!--		</td>-->
-<!--		</tr>-->
-<!--		</tbody>-->
-<!--		</table>-->
-<!--		</div>-->
-<!--	<br />-->
-<!--		Please try to think hard and be creative!<br />-->
-<!--	    We ask you to use the inspiration source exactly as you are instructed-->
-<!--	    (every inspiration source will have instructions).-->
-<!--    <br />-->
-<!--	<br />-->
     <input name="buttonpre" onclick="goToMainSection()" type="button"
 		   style="font-family: Tahoma,serif; font-size: 18px" value="Continue to the first section!" /></div>
 
-
-
 <div id="main" style="display:none;margin:30px 50px 20px 50px; font-family: Tahoma,serif; font-size: 18px">
-<div id="banner" style="background-color:paleturquoise" width="100%">Section 1 out of 4</div>
+<div id="banner" style="background-color:paleturquoise" width="100%">Find solutions yourself</div>
 	<br />
-	<div id="question_instruction">In this section, we ask you to find solutions to the problem:
-		<font color="#9932cc"><b><span id="problem_1"></span></b></font></div>
+	<div id="question_instruction">In this task, we ask you to find solutions to the problem:
+		<font color="#9932cc"><b><span id="task_chosen_problem"></span></b></font></div>
 	<div id="one"><script language="Javascript">
-		var random_number = Math.floor(Math.random() * possible_versions.length)
-		console.log("random number: ")
-		console.log(random_number)
-		chosen_version = possible_versions[random_number]
+
+		var random_number_problem = Math.floor(Math.random() * possible_problems.length)
+		var random_number_condition_version = Math.floor(Math.random() * possible_versions.length)
+		chosen_problem_idx = possible_problems[random_number_problem]
+		chosen_problem = problems_mapping[chosen_problem_idx]
+
+		chosen_version = possible_versions[random_number_condition_version]
 		chosen_order = versions_mapping[chosen_version]
 
-		// update logger with chosen order
-		document.getElementById('logger').value += "Chosen number for task: " + random_number + ", Chosen order for task: " + chosen_order + '\n\n';
+		chosen_condition = new_to_old_cond_mapping[chosen_order[section]]
+
+		writeToLogger("Chosen problem: " + chosen_problem + '\n')
+
+		writeToLogger("Chosen condition: " + chosen_condition + '\n')
+
+		document.getElementById("task_chosen_problem").innerHTML = chosen_problem;
+		// curr_graph_url_problem = chosen_problem.replace(" ", "%20");
 
 		// log beginning time
-		logCurrentTime("first instructions section")
+		// logCurrentTime("first instructions section") ?
 
-		document.getElementById("problem_1").innerHTML = problems_mapping[chosen_order[section][0]];
-		curr_graph_url_problem = problems_mapping[chosen_order[section][0]].replace(" ", "%20");
-		// document.getElementById("engine_link_1").href = "http://inspiration2.researchsoftwarehosting.org/call-backend-api?user_problem="+curr_graph_url_problem;
       </script>
 
 
@@ -627,78 +407,30 @@ function myTimerInspirationAnswer() {
 	<tbody>
 		<tr>
 			<td style="padding-right:20px; padding-top: 15px" valign="TOP">
-			<div id="partNumber" class="numberCircle">1</div>
+<!--			<div id="partNumber" class="numberCircle">1</div>-->
 			</td>
 			<td>
 			<script language="Javascript">
               </script>
-			<table id="self_solutions_instructions" style="border-collapse: collapse; font-family: Tahoma,serif; font-size: 18px">
-				<tbody>
-					<tr>
-						<td colspan="2">
-						<p align="justify"><b>Instructions:</b> We ask you to think about the problem,
-							and try to come up with as many creative solutions as you can. <img src="./self_idea.png">
-							<br />
-							<br />
-							Please write shortly the solutions you came up and what inspired you to think of them.
-							(you do not have to fill all 10 rows)
-							<br/>
-							<br/>
-							<font color="#dc143c"><b>Do not</b></font> use any search engine or knowledge source.
-							<br />
-							<br />
-							<b>Example (how to describe a solution):</b>
-							<br />
-							<div id="example_self_solutions" style="display:block">
-								<table style="border: 1px solid black">
-								<tbody>
-								<tr style="border:2px solid #aaa;">
-								<td colspan="1" width="40%">
-								Solution 1: <br/>
-									<textarea style="color: royalblue" readonly cols="60" id="example_self_1" name="example_self_1" rows="3">a special hair lotion with a chemical compound that would accelerate the drying process of your hair</textarea><br />
-								<br />
-								</td>
-								<td colspan="1" width="40%">
-								What inspired you 1:<br/>
-									<textarea style="color: royalblue" readonly cols="60" id="example_insp_self_1" name="example_insp_self_1" rows="3">In order to dry nail polish, you can use a fast dry nail polish and spread it on top of your nails. This made me think of some lotion that you can apply to your hair to make it dry faster.</textarea><br />
-								<br />
-								</td>
-								</tr>
-								</tbody>
-								</table>
-							</div>
-							<br />
-							<br />
-							You will have <b>5 minutes</b> to complete this part.
-							<br />
-						    </td>
-							</tr>
-					        <tr>
-							<td>
-							<br />
-						<input id="button2" name="button2" onclick="showSelfIdeasSection()" style="font-family: Tahoma,serif; font-size: 18px" type="button" value="Got it, let's go!" /></td>
-					</tr>
-				</tbody>
-			</table>
 
 			<table id="inspiration_based_solutions_instructions" style="border-collapse: collapse; display:none; font-family: Tahoma,serif; font-size: 18px">
-				<tbody id="google">
+				<tbody id="cond_2">
 					<tr>
 						<td colspan="2">
-							<p><font face="Times New Roman"><input id="stimulus" name="stimulus" type="hidden" value="" /></font></p>
-							<p align="justify"><b>Instructions:</b> In this part we provide you an <font color="#00008b"><b>inspiration source</b></font> to potentially help you. <br />
+							<p><font face="Times New Roman"><input id="stimulus1" name="stimulus2" type="hidden" value="" /></font></p>
 							<br />
-							Here, the inspiration source will be <em>Links to online sources.</em> <img src="link.png">
+							<p align="justify"><b>Instructions:</b> We provide you an
+								<font color="#00008b"><b>inspiration source</b></font> to potentially help you. <br />
+							In the box below, you will see a list of about 30 inspirational texts.
 							<br />
-							In the box below, you will see a list of about 30 links to different online sources.
 							<br />
-							<br />
-								<u>What you should do:</u> You may click on any of those links and use
-								them to come up with solutions. Use link number as inspiration source id.
+								<u>What you should do:</u> You may use those text sources to come up with solutions.
+								Use the numbers on the left as inspiration source id.
                             <br />
 							<br />
-							    Please write shortly the solutions you came up with and the link numbers that inspired you
-								(you do not have to fill all rows).
+							    Please write shortly the solutions you came up with and the cluster numbers that inspired you
+								(you do not have to fill all rows). In case you didn't use any inspiration source for
+								a solution, you don't have to fill in an id.
 							<br />
 							<br />
 								<br />
@@ -718,7 +450,7 @@ function myTimerInspirationAnswer() {
 								<br />
 								</td>
 								<td colspan="1" width="40%">
-								Specific inspiration source 1:<br /><textarea style="color: royalblue" readonly cols="40" id="example_insp_number" name="example_insp_links" rows="3">2, 3</textarea><br />
+								Inspiration source id 1:<br /><textarea style="color: royalblue" readonly cols="40" id="example_insp_number" name="example_insp_links" rows="3">2, 3</textarea><br />
 								<br />
 								</td>
 								</tr>
@@ -730,28 +462,27 @@ function myTimerInspirationAnswer() {
 							You will have <b>10 minutes</b> to complete this part.
 							<br />
 							<br />
-						<input id="button3google" name="button3" onclick="showInspirationSection()" style="font-family: Tahoma,serif; font-size: 18px" type="button" value="Got it, let's go!" />
+						<input id="button3cond_2" name="button3" onclick="showInspirationSection('cond_2')" style="font-family: Tahoma,serif; font-size: 18px" type="button" value="Got it, let's go!" />
 						</td>
 					</tr>
 				</tbody>
-				<tbody id="random">
+				<tbody id="cond_3">
 					<tr><!-- instructions -->
 						<td colspan="2">
 							<p><font face="Times New Roman"><input id="stimulus2" name="stimulus2" type="hidden" value="" /></font></p>
-							<p align="justify"><b>Instructions:</b> In this part we provide you an
+							<br />
+							<p align="justify"><b>Instructions:</b> We provide you an
 								<font color="#00008b"><b>inspiration source</b></font> to potentially help you. <br />
-							<br />
-							Here, the inspiration source will be <em>sentences and phrases.</em> <img src="text.png">
-							<br />
-							In the box below, you will see a list of about 30 clusters of sentences and phrases.
+							In the box below, you will see a list of about 30 inspirational texts.
 							<br />
 							<br />
 								<u>What you should do:</u> You may use those text sources to come up with solutions.
-								Use cluster number as inspiration source id.
+								Use the numbers on the left as inspiration source id.
                             <br />
 							<br />
 							    Please write shortly the solutions you came up with and the cluster numbers that inspired you
-								(you do not have to fill all rows).
+								(you do not have to fill all rows). In case you didn't use any inspiration source for
+								a solution, you don't have to fill in an id.
 							<br />
 							<br />
 								<br />
@@ -771,7 +502,7 @@ function myTimerInspirationAnswer() {
 								<br />
 								</td>
 								<td colspan="1" width="40%">
-								Specific inspiration source 1:<br /><textarea style="color: royalblue" readonly cols="40" id="example_insp_texts_number" name="example_insp_links" rows="3">11, 22</textarea><br />
+								Inspiration source id 1:<br /><textarea style="color: royalblue" readonly cols="40" id="example_insp_texts_number" name="example_insp_links" rows="3">11, 22</textarea><br />
 								<br />
 								</td>
 								</tr>
@@ -783,52 +514,26 @@ function myTimerInspirationAnswer() {
 							You will have <b>10 minutes</b> to complete this part.
 							<br />
 							<br />
-						<input id="button3random" name="button3" style="font-family: Tahoma,serif; font-size: 18px" onclick="showInspirationSection()" type="button" value="Got it, let's go!" /></td>
+						<input id="button3cond_3" name="button3" style="font-family: Tahoma,serif; font-size: 18px" onclick="showInspirationSection('cond_3')" type="button" value="Got it, let's go!" /></td>
 					</tr>
 				</tbody>
-				<tbody id="engine">
+				<tbody id="cond_1">
 					<tr>
 						<td colspan="2">
 							<p><font face="Times New Roman"><input id="stimulus3" name="stimulus3" type="hidden" value="" /></font></p>
-							<p align="justify"><b>Instructions:</b> In this part we provide you an
+							<br />
+							<p align="justify"><b>Instructions:</b> We provide you an
 								<font color="#00008b"><b>inspiration source</b></font> to potentially help you. <br />
-							<br />
-							Here, the inspiration source will be <em>Inspiration tool:</em>
-								an interface that allows you to explore problems and solutions.
-								<br/>
-								Please watch the video presented below to understand what exactly you should do.<img src="engine.png">
-<!--							<br />-->
-<!--							In the box below, you will see a link that will direct you to the graph.-->
+							In the box below, you will see a list of about 30 inspirational texts.
 							<br />
 							<br />
-							<u>Engine explanations and instructions:</u>
-							The next video, provides a wide explanation of the graph and it's usage. <br />
-							We also provide the link to the graph presented in the video, so you can try it yourself
-								(we encourage you to do so, it will make things clearer when you approach the actual graph.).
-							<br />
-
-							Please note that this inspiration source has the most complicated
-							instructions, so make sure you watch the video and <font color="#b22222"><b>pay close attention</b></font> to it.
-							<br />
-								<video width="500" height="400" controls>
- 										 <source src="./MUSEtutorial2.mp4" type="video/mp4">
-								</video>
-
-								<br/>
-								<br/>
-								<br/>
-								a link to the graph from the video: <br />
-								<a href="http://inspiration2.researchsoftwarehosting.org/call-backend-api?user_problem=protect%20plants&graph_name=experiment" target="_blank" onclick="markPlayGraphAsClicked()">protect plants graph</a>
-								<br />
-							<br />
-							<u>What you should do:</u> You may use this graph as instructed in the video to come up with
-								solutions. Use node number (will appear when you hover over it) as inspiration source id.
-								<br/>
-								In the box below, you will see a link that will direct you to the graph.
+								<u>What you should do:</u> You may use those text sources to come up with solutions.
+								Use the numbers on the left as inspiration source id.
                             <br />
 							<br />
-							    Please write shortly the solutions you came up with and the node numbers that inspired you
-								(you do not have to fill all rows).
+							    Please write shortly the solutions you came up with and the cluster numbers that inspired you
+								(you do not have to fill all rows). In case you didn't use any inspiration source for
+								a solution, you don't have to fill in an id.
 							<br />
 							<br />
 								<br />
@@ -848,7 +553,7 @@ function myTimerInspirationAnswer() {
 								<br />
 								</td>
 								<td colspan="1" width="40%">
-								Specific inspiration source 1:<br /><textarea style="color: royalblue" readonly cols="40" id="example_insp_engine_number" name="example_insp_links" rows="3">55</textarea><br />
+								Inspiration source id 1:<br /><textarea style="color: royalblue" readonly cols="40" id="example_insp_engine_number" name="example_insp_links" rows="3">55</textarea><br />
 								<br />
 								</td>
 								</tr>
@@ -860,25 +565,19 @@ function myTimerInspirationAnswer() {
 							You will have <b>10 minutes</b> to complete this part.
 							<br />
 							<br />
-						<input id="button3engine" name="button3" style="font-family: Tahoma,serif; font-size: 18px" onclick="showEngineInspirationSection()" type="button" value="Got it, let's go!" /></td>
+						<input id="button3cond_1" name="button3" style="font-family: Tahoma,serif; font-size: 18px" onclick="showInspirationSection('cond_1')" type="button" value="Got it, let's go!" /></td>
 					</tr>
 				</tbody>
-				<tbody id="nothing">
+				<tbody id="cond_4">
 					<tr>
 						<td colspan="2">
-						<p><font face="Times New Roman"><input id="stimulus4" name="stimulus2" type="hidden" value="" /></font></p>
-							<p align="justify"><b>Instructions:</b> In this part we do not provide any <font color="#00008b"><b>inspiration source</b></font>.
+						<p><font face="Times New Roman"><input id="stimulus4" name="stimulus4" type="hidden" value="" /></font></p>
+							<p align="justify"><b>Instructions:</b> We do not provide any <font color="#00008b"><b>inspiration source</b></font>.
 							<br />
 							<br />
-								<u>What you should do:</u> <b>continue</b> thinking of solutions by yourself as in the first part.
-							<br />
-							<br /> <img src="self_idea.png">
+								<u>What you should do:</u> think about the problem, and try to come up with as many creative solutions as you can.
 							<br />
 							<br />
-<!--							Reminder of the self section instructions: We ask you to think about the problem, and try to-->
-<!--							come up with as many creative solutions as you can.-->
-<!--							<br />-->
-<!--							<br />-->
 							<font color="#dc143c"><b>Do not</b></font> use any search engine or knowledge source.
 							<br />
 							<br />
@@ -906,7 +605,7 @@ function myTimerInspirationAnswer() {
 							You will have <b>10 minutes</b> to complete this part.
 							<br />
 							<br />
-						<input id="button3nothing" name="button3" style="font-family: Tahoma,serif; font-size: 18px" onclick="showInspirationSection()" type="button" value="Got it, let's go!" /></td>
+						<input id="button3cond_4" name="button3" style="font-family: Tahoma,serif; font-size: 18px" onclick="showInspirationSection('cond_4')" type="button" value="Got it, let's go!" /></td>
 					</tr>
 				</tbody>
 			</table>
@@ -920,287 +619,21 @@ function myTimerInspirationAnswer() {
 			</table>
 			<br />
 		   <br />
-           <div id="self_solutions_blank_lines" style="display:none;">
-			 <table style="margin-left: 3% ; border: 1px solid black">
-				<tbody>
 
-					<tr colspan="1" width="10%" valign="TOP">
-						<div style="margin-left: 3%" id="timer_self">&nbsp;</div>
-					</tr>
-					<tr style="border:2px solid #aaa;"><!-- inspiration -->
-						<td colspan="1" width="80%">
-						<div class="scrollable" id="scroll_self_solutions"><b>Your solutions & Inspirations:</b>
-						<div id="self_solutions_section1" style="display:block">
-						<table>
-						<tbody>
-						<tr style="border:2px solid #aaa;">
-						<td colspan="1" width="40%">
-<!--						Solution 1:<textarea required cols="80" id="self_solution_1_1" name="self_solution_1_1" rows="3"></textarea><br />-->
-						Solution 1:<br /><textarea cols="60" id="self_solution_1_1" name="entry.164619028" rows="3"></textarea><br />
-						Solution 2:<br /><textarea cols="60" id="self_solution_1_2" name="entry.255246931" rows="3"></textarea><br />
-						Solution 3:<br /><textarea cols="60" id="self_solution_1_3" name="entry.714652671" rows="3"></textarea><br />
-						Solution 4:<br /><textarea cols="60" id="self_solution_1_4" name="entry.936328001" rows="3"></textarea><br />
-						Solution 5:<br /><textarea cols="60" id="self_solution_1_5" name="entry.432462636" rows="3"></textarea><br />
-						Solution 6:<br /><textarea cols="60" id="self_solution_1_6" name="entry.1974457815" rows="3"></textarea><br />
-						Solution 7:<br /><textarea cols="60" id="self_solution_1_7" name="entry.49668693" rows="3"></textarea><br />
-						Solution 8:<br /><textarea cols="60" id="self_solution_1_8" name="entry.1248181641" rows="3"></textarea><br />
-						Solution 9:<br /><textarea cols="60" id="self_solution_1_9" name="entry.1443130783" rows="3"></textarea><br />
-						Solution 10:<br /><textarea cols="60" id="self_solution_1_10" name="entry.280309393" rows="3"></textarea><br />
-						More solutions:<br /><textarea cols="60" id="more_self_solutions_1" name="entry.1025646376" rows="3"></textarea><br />
-						<br />
-						</td>
-						<td colspan="1" width="40%">
-						What inspired you 1:<br /><textarea cols="60" id="self_inspiration_explain_1_1" name="entry.1008899533" rows="3"></textarea><br />
-						What inspired you 2:<br /><textarea cols="60" id="self_inspiration_explain_1_2" name="entry.189345733" rows="3"></textarea><br />
-						What inspired you 3:<br /><textarea cols="60" id="self_inspiration_explain_1_3" name="entry.1620162062" rows="3"></textarea><br />
-						What inspired you 4:<br /><textarea cols="60" id="self_inspiration_explain_1_4" name="entry.335344347" rows="3"></textarea><br />
-						What inspired you 5:<br /><textarea cols="60" id="self_inspiration_explain_1_5" name="entry.681893091" rows="3"></textarea><br />
-						What inspired you 6:<br /><textarea cols="60" id="self_inspiration_explain_1_6" name="entry.1055968095" rows="3"></textarea><br />
-						What inspired you 7:<br /><textarea cols="60" id="self_inspiration_explain_1_7" name="entry.782925220" rows="3"></textarea><br />
-						What inspired you 8:<br /><textarea cols="60" id="self_inspiration_explain_1_8" name="entry.941382197" rows="3"></textarea><br />
-						What inspired you 9:<br /><textarea cols="60" id="self_inspiration_explain_1_9" name="entry.837215395" rows="3"></textarea><br />
-						What inspired you 10:<br /><textarea cols="60" id="self_inspiration_explain_1_10" name="entry.2022967023" rows="3"></textarea><br />
-						What inspired you - More:<br /><textarea cols="60" id="more_self_inspiration_explain_1" name="entry.1048140812" rows="3"></textarea><br />
-						<br />
-						</td>
-						</tr>
-						</tbody>
-						</table>
-						<br /></div>
-
-						<div id="self_solutions_section2" style="display:block">
-						<br />
-						<table>
-						<tbody>
-						<tr style="border:2px solid #aaa;">
-						<td colspan="1" width="40%">
-						Solution 1:<br /><textarea cols="60" id="self_solution_2_1" name="entry.1393003731" rows="3"></textarea><br />
-						Solution 2:<br /><textarea cols="60" id="self_solution_2_2" name="entry.476151780" rows="3"></textarea><br />
-						Solution 3:<br /><textarea cols="60" id="self_solution_2_3" name="entry.1879792102" rows="3"></textarea><br />
-						Solution 4:<br /><textarea cols="60" id="self_solution_2_4" name="entry.2025968086" rows="3"></textarea><br />
-						Solution 5:<br /><textarea cols="60" id="self_solution_2_5" name="entry.214730436" rows="3"></textarea><br />
-						Solution 6:<br /><textarea cols="60" id="self_solution_2_6" name="entry.2089252985" rows="3"></textarea><br />
-						Solution 7:<br /><textarea cols="60" id="self_solution_2_7" name="entry.1032168199" rows="3"></textarea><br />
-						Solution 8:<br /><textarea cols="60" id="self_solution_2_8" name="entry.769337706" rows="3"></textarea><br />
-						Solution 9:<br /><textarea cols="60" id="self_solution_2_9" name="entry.167120485" rows="3"></textarea><br />
-						Solution 10:<br /><textarea cols="60" id="self_solution_2_10" name="entry.989643932" rows="3"></textarea><br />
-						More solutions:<br /><textarea cols="60" id="more_self_solutions_2" name="entry.1180984826" rows="3"></textarea><br />
-						<br />
-						</td>
-						<td colspan="1" width="40%">
-						What inspired you 1:<br /><textarea cols="60" id="self_inspiration_source_2_1" name="entry.1577139857" rows="3"></textarea><br />
-						What inspired you 2:<br /><textarea cols="60" id="self_inspiration_source_2_2" name="entry.27833622" rows="3"></textarea><br />
-						What inspired you 3:<br /><textarea cols="60" id="self_inspiration_source_2_3" name="entry.711892521" rows="3"></textarea><br />
-						What inspired you 4:<br /><textarea cols="60" id="self_inspiration_source_2_4" name="entry.1008390113" rows="3"></textarea><br />
-						What inspired you 5:<br /><textarea cols="60" id="self_inspiration_source_2_5" name="entry.433637826" rows="3"></textarea><br />
-						What inspired you 6:<br /><textarea cols="60" id="self_inspiration_source_2_6" name="entry.1164794192" rows="3"></textarea><br />
-						What inspired you 7:<br /><textarea cols="60" id="self_inspiration_source_2_7" name="entry.432662219" rows="3"></textarea><br />
-						What inspired you 8:<br /><textarea cols="60" id="self_inspiration_source_2_8" name="entry.1248524560" rows="3"></textarea><br />
-						What inspired you 9:<br /><textarea cols="60" id="self_inspiration_source_2_9" name="entry.1297029306" rows="3"></textarea><br />
-						What inspired you 10:<br /><textarea cols="60" id="self_inspiration_source_2_10" name="entry.260954167" rows="3"></textarea><br />
-						What inspired you - More:<br /><textarea cols="60" id="more_self_inspiration_source_2" name="entry.1239094844" rows="3"></textarea><br />
-						<br />
-						</td>
-						</tr>
-						</tbody>
-						</table>
-						<br /></div>
-
-
-						<div id="self_solutions_section3" style="display:block">
-						<br />
-						<table>
-						<tbody>
-						<tr style="border:2px solid #aaa;">
-						<td colspan="1" width="40%">
-						Solution 1:<br /><textarea cols="60" id="self_solution_3_1" name="entry.100916712" rows="3"></textarea><br />
-						Solution 2:<br /><textarea cols="60" id="self_solution_3_2" name="entry.684956698" rows="3"></textarea><br />
-						Solution 3:<br /><textarea cols="60" id="self_solution_3_3" name="entry.1493298114" rows="3"></textarea><br />
-						Solution 4:<br /><textarea cols="60" id="self_solution_3_4" name="entry.1102881700" rows="3"></textarea><br />
-						Solution 5:<br /><textarea cols="60" id="self_solution_3_5" name="entry.1472304181" rows="3"></textarea><br />
-						Solution 6:<br /><textarea cols="60" id="self_solution_3_6" name="entry.1749635392" rows="3"></textarea><br />
-						Solution 7:<br /><textarea cols="60" id="self_solution_3_7" name="entry.281619014" rows="3"></textarea><br />
-						Solution 8:<br /><textarea cols="60" id="self_solution_3_8" name="entry.1574304315" rows="3"></textarea><br />
-						Solution 9:<br /><textarea cols="60" id="self_solution_3_9" name="entry.942526220" rows="3"></textarea><br />
-						Solution 10:<br /><textarea cols="60" id="self_solution_3_10" name="entry.1565381421" rows="3"></textarea><br />
-						More solutions:<br /><textarea cols="60" id="more_self_solutions_3" name="entry.498103125" rows="3"></textarea><br />
-						<br />
-						</td>
-						<td colspan="1" width="40%">
-						What inspired you 1:<br /><textarea cols="60" id="self_inspiration_source_3_1" name="entry.1363890242" rows="3"></textarea><br />
-						What inspired you 2:<br /><textarea cols="60" id="self_inspiration_source_3_2" name="entry.181236943" rows="3"></textarea><br />
-						What inspired you 3:<br /><textarea cols="60" id="self_inspiration_source_3_3" name="entry.504884924" rows="3"></textarea><br />
-						What inspired you 4:<br /><textarea cols="60" id="self_inspiration_source_3_4" name="entry.339123477" rows="3"></textarea><br />
-						What inspired you 5:<br /><textarea cols="60" id="self_inspiration_source_3_5" name="entry.450434121" rows="3"></textarea><br />
-						What inspired you 6:<br /><textarea cols="60" id="self_inspiration_source_3_6" name="entry.666621188" rows="3"></textarea><br />
-						What inspired you 7:<br /><textarea cols="60" id="self_inspiration_source_3_7" name="entry.1085080451" rows="3"></textarea><br />
-						What inspired you 8:<br /><textarea cols="60" id="self_inspiration_source_3_8" name="entry.139101482" rows="3"></textarea><br />
-						What inspired you 9:<br /><textarea cols="60" id="self_inspiration_source_3_9" name="entry.644157440" rows="3"></textarea><br />
-						What inspired you 10:<br /><textarea cols="60" id="self_inspiration_source_3_10" name="entry.2012603171" rows="3"></textarea><br />
-						What inspired you - More:<br /><textarea cols="60" id="more_self_inspiration_source_3" name="entry.700260026" rows="3"></textarea><br />
-						<br />
-						</td>
-						</tr>
-						</tbody>
-						</table>
-						<br /></div>
-
-						<div id="self_solutions_section4" style="display:block">
-						<br />
-						<table>
-						<tbody>
-						<tr style="border:2px solid #aaa;">
-						<td colspan="1" width="40%">
-						Solution 1:<br /><textarea cols="60" id="self_solution_4_1" name="entry.289624687" rows="3"></textarea><br />
-						Solution 2:<br /><textarea cols="60" id="self_solution_4_2" name="entry.380403759" rows="3"></textarea><br />
-						Solution 3:<br /><textarea cols="60" id="self_solution_4_3" name="entry.987153476" rows="3"></textarea><br />
-						Solution 4:<br /><textarea cols="60" id="self_solution_4_4" name="entry.48983967" rows="3"></textarea><br />
-						Solution 5:<br /><textarea cols="60" id="self_solution_4_5" name="entry.925196071" rows="3"></textarea><br />
-						Solution 6:<br /><textarea cols="60" id="self_solution_4_6" name="entry.1332028638" rows="3"></textarea><br />
-						Solution 7:<br /><textarea cols="60" id="self_solution_4_7" name="entry.1208814601" rows="3"></textarea><br />
-						Solution 8:<br /><textarea cols="60" id="self_solution_4_8" name="entry.1963286203" rows="3"></textarea><br />
-						Solution 9:<br /><textarea cols="60" id="self_solution_4_9" name="entry.961517169" rows="3"></textarea><br />
-						Solution 10:<br /><textarea cols="60" id="self_solution_4_10" name="entry.303392690" rows="3"></textarea><br />
-						More solutions:<br /><textarea cols="60" id="more_self_solutions_4" name="entry.1158667139" rows="3"></textarea><br />
-						<br />
-						</td>
-						<td colspan="1" width="40%">
-						What inspired you 1:<br /><textarea cols="60" id="self_inspiration_source_4_1" name="entry.641001914" rows="3"></textarea><br />
-						What inspired you 2:<br /><textarea cols="60" id="self_inspiration_source_4_2" name="entry.2011652522" rows="3"></textarea><br />
-						What inspired you 3:<br /><textarea cols="60" id="self_inspiration_source_4_3" name="entry.290683841" rows="3"></textarea><br />
-						What inspired you 4:<br /><textarea cols="60" id="self_inspiration_source_4_4" name="entry.1897920191" rows="3"></textarea><br />
-						What inspired you 5:<br /><textarea cols="60" id="self_inspiration_source_4_5" name="entry.1184572139" rows="3"></textarea><br />
-						What inspired you 6:<br /><textarea cols="60" id="self_inspiration_source_4_6" name="entry.1270972159" rows="3"></textarea><br />
-						What inspired you 7:<br /><textarea cols="60" id="self_inspiration_source_4_7" name="entry.882924610" rows="3"></textarea><br />
-						What inspired you 8:<br /><textarea cols="60" id="self_inspiration_source_4_8" name="entry.1027834025" rows="3"></textarea><br />
-						What inspired you 9:<br /><textarea cols="60" id="self_inspiration_source_4_9" name="entry.2046446841" rows="3"></textarea><br />
-						What inspired you 10:<br /><textarea cols="60" id="self_inspiration_source_4_10" name="entry.1251081802" rows="3"></textarea><br />
-						What inspired you - More:<br /><textarea cols="60" id="more_self_inspiration_source_4" name="entry.1860797968" rows="3"></textarea><br />
-						<br />
-						</td>
-						</tr>
-						</tbody>
-						</table>
-						<br /></div>
-						</div>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-	</div>
 		<div id="inspiration_based_solutions_blank_lines" style="display:none;">
 			<div id="inspiration_box_section_1" style="display:none">
 				<table style="margin-left: 3%; border: 3px solid #679b5c ; width: 40%">
 				<tbody>
 				<tr>
-				<td id="inspiration_box_1_text_line" style="display:none"><b>Inspiration source - text paragraphs:</b></td>
-				<td id="inspiration_box_1_links_line" style="display:none"><b>Inspiration source - links:</b></td>
-				<td id="inspiration_box_1_graph_line" style="display:none"><b>Inspiration source - inspiration graph:</b></td>
+				<td id="inspiration_box_1_text_line" style="display:none"><b>Inspirational texts source:</b></td>
+				<td id="inspiration_box_1_links_line" style="display:none"><b>Inspirational texts source:</b></td>
+				<td id="inspiration_box_1_graph_line" style="display:none"><b>Inspirational texts source:</b></td>
 				</tr>
 				<br/>
 				<tr style="border: 2px solid #080809;">
-				<td id="links_1_0" style="display:none;"><embed type="text/html" src="./links_0.html" width="100%" height="700px"></td>
-				<td id="links_1_1" style="display:none;"><embed type="text/html" src="./links_1.html" width="100%" height="700px"></td>
-				<td id="links_1_2" style="display:none;"><embed type="text/html" src="./links_2.html" width="100%" height="700px"></td>
-				<td id="links_1_3" style="display:none;"><embed type="text/html" src="./links_3.html" width="100%" height="700px"></td>
-				<td id="texts_1" style="display:none;"><embed type="text/html" src="./texts_0.html" width="100%" height="700px"></td>
-				<td id="engine_1" style="display:none; width: 50%">
-					<br/>
-					<a id="engine_link_1" href="" target="_blank">Link to inspiration tool</a>
-					<br/>
-				</td>
-				<td id="nothing_1" style="display:none; width: 100%">
-					<br/>
-					<b>No usage of inspiration source here. please continue to think of solutions yourself.</b>
-					<br/>
-				</td>
-				</tr>
-				</tbody>
-				</table>
-				</div>
-			<div id="inspiration_box_section_2" style="display:none">
-				<table style="margin-left: 3%; border: 3px solid #679b5c; width: 40%">
-				<tbody>
-				<tr>
-					<td id="inspiration_box_2_text_line" style="display:none"><b>Inspiration source - text paragraphs:</b></td>
-					<td id="inspiration_box_2_links_line" style="display:none"><b>Inspiration source - links:</b></td>
-					<td id="inspiration_box_2_graph_line" style="display:none"><b>Inspiration source - inspiration graph:</b></td>
-				</tr>
-				<br/>
-				<tr style="border:2px solid #aaa;">
-				<td id="links_2_0" style="display:none"><embed type="text/html" src="./links_0.html" width="100%" height="700px"></td>
-				<td id="links_2_1" style="display:none"><embed type="text/html" src="./links_1.html" width="100%" height="700px"></td>
-				<td id="links_2_2" style="display:none"><embed type="text/html" src="./links_2.html" width="100%" height="700px"></td>
-				<td id="links_2_3" style="display:none"><embed type="text/html" src="./links_3.html" width="100%" height="700px"></td>
-				<td id="texts_2" style="display:none"><embed type="text/html" src="./texts_1.html" width="100%" height="700px"></td>
-				<td id="engine_2" style="display:none">
-					<br/>
-					<a id="engine_link_2" href="" target="_blank">Link to inspiration tool</a>
-					<br/>
-				</td>
-				<td id="nothing_2" style="display:none; width: 100%">
-					<br/>
-					<b>No usage of inspiration source here. please continue to think of solutions yourself.</b>
-					<br/>
-				</td>
-				</tr>
-				</tbody>
-				</table>
-				</div>
-				<div id="inspiration_box_section_3" style="display:none">
-				<table style="margin-left: 3%; border: 3px solid #679b5c; width: 40%">
-				<tbody>
-				<tr>
-					<td id="inspiration_box_3_text_line" style="display:none"><b>Inspiration source - text paragraphs:</b></td>
-					<td id="inspiration_box_3_links_line" style="display:none"><b>Inspiration source - links:</b></td>
-					<td id="inspiration_box_3_graph_line" style="display:none"><b>Inspiration source - inspiration graph:</b></td>
-				</tr>
-				<br/>
-				<tr style="border:2px solid #aaa;">
-				<td id="links_3_0" style="display:none"><embed type="text/html" src="./links_0.html" width="100%" height="700px"></td>
-				<td id="links_3_1" style="display:none"><embed type="text/html" src="./links_1.html" width="100%" height="700px"></td>
-				<td id="links_3_2" style="display:none"><embed type="text/html" src="./links_2.html" width="100%" height="700px"></td>
-				<td id="links_3_3" style="display:none"><embed type="text/html" src="./links_3.html" width="100%" height="700px"></td>
-				<td id="texts_3" style="display:none"><embed type="text/html" src="./texts_1.html" width="100%" height="700px"></td>
-				<td id="engine_3" style="display:none">
-					<br/>
-					<a id="engine_link_3" href="" target="_blank">Link to inspiration tool</a>
-					<br/>
-				</td>
-				<td id="nothing_3" style="display:none">
-					<br/>
-					<b>No usage of inspiration source here. please continue to think of solutions yourself.</b>
-					<br/>
-				</td>
-				</tr>
-				</tbody>
-				</table>
-				</div>
-			<div id="inspiration_box_section_4" style="display:none;">
-				<table style="margin-left: 3%; border: 3px solid #679b5c; width: 40%">
-				<tbody>
-				<tr>
-					<td id="inspiration_box_4_text_line" style="display:none"><b>Inspiration source - text paragraphs:</b></td>
-					<td id="inspiration_box_4_links_line" style="display:none"><b>Inspiration source - links:</b></td>
-					<td id="inspiration_box_4_graph_line" style="display:none"><b>Inspiration source - inspiration graph:</b></td>
-				</tr>
-				<br/>
-				<tr style="border:2px solid #aaa;">
-				<td id="links_4_0" style="display:none"><embed type="text/html" src="./links_0.html" width="100%" height="700px"></td>
-				<td id="links_4_1" style="display:none"><embed type="text/html" src="./links_1.html" width="100%" height="700px"></td>
-				<td id="links_4_2" style="display:none"><embed type="text/html" src="./links_2.html" width="100%" height="700px"></td>
-				<td id="links_4_3" style="display:none"><embed type="text/html" src="./links_3.html" width="100%" height="700px"></td>
-				<td id="texts_4" style="display:none"><embed type="text/html" src="./texts_1.html" width="100%" height="700px"></td>
-				<td id="engine_4" style="display:none">
-					<br/>
-					<a id="engine_link_4" href="" target="_blank">Link to inspiration tool</a>
-					<br/>
-				</td>
-				<td id="nothing_4" style="display:none">
-					<br/>
-					<b>No usage of inspiration source here. please continue to think of solutions yourself.</b>
-					<br/>
-				</td>
+				<td id="cond_2_1" style="display:none;"><embed type="text/html" src="" width="100%" height="700px"></td>
+				<td id="cond_3_1" style="display:none;"><embed type="text/html" src="" width="100%" height="700px"></td>
+				<td id="cond_1_1" style="display:none;"><embed type="text/html" src="" width="100%" height="700px"></td>
 				</tr>
 				</tbody>
 				</table>
@@ -1250,16 +683,16 @@ function myTimerInspirationAnswer() {
 						<br />
 						</td>
 						<td id="specific_source_1" colspan="1" width="40%">
-						Specific inspiration source 1:<br /><textarea cols="40" id="inspiration_source_1_1" name="entry.2088415631" rows="3"></textarea><br />
-						Specific inspiration source 2:<br /><textarea cols="40" id="inspiration_source_1_2" name="entry.2077441529" rows="3"></textarea><br />
-						Specific inspiration source 3:<br /><textarea cols="40" id="inspiration_source_1_3" name="entry.311318780" rows="3"></textarea><br />
-						Specific inspiration source 4:<br /><textarea cols="40" id="inspiration_source_1_4" name="entry.1273149936" rows="3"></textarea><br />
-						Specific inspiration source 5:<br /><textarea cols="40" id="inspiration_source_1_5" name="entry.237667301" rows="3"></textarea><br />
-						Specific inspiration source 6:<br /><textarea cols="40" id="inspiration_source_1_6" name="entry.1375352256" rows="3"></textarea><br />
-						Specific inspiration source 7:<br /><textarea cols="40" id="inspiration_source_1_7" name="entry.1774926837" rows="3"></textarea><br />
-						Specific inspiration source 8:<br /><textarea cols="40" id="inspiration_source_1_8" name="entry.640395032" rows="3"></textarea><br />
-						Specific inspiration source 9:<br /><textarea cols="40" id="inspiration_source_1_9" name="entry.130655511" rows="3"></textarea><br />
-						Specific inspiration source 10:<br /><textarea cols="40" id="inspiration_source_1_10" name="entry.1027911890" rows="3"></textarea><br />
+						Inspiration source id 1:<br /><textarea cols="40" id="inspiration_source_1_1" name="entry.2088415631" rows="3"></textarea><br />
+						Inspiration source id 2:<br /><textarea cols="40" id="inspiration_source_1_2" name="entry.2077441529" rows="3"></textarea><br />
+						Inspiration source id 3:<br /><textarea cols="40" id="inspiration_source_1_3" name="entry.311318780" rows="3"></textarea><br />
+						Inspiration source id 4:<br /><textarea cols="40" id="inspiration_source_1_4" name="entry.1273149936" rows="3"></textarea><br />
+						Inspiration source id 5:<br /><textarea cols="40" id="inspiration_source_1_5" name="entry.237667301" rows="3"></textarea><br />
+						Inspiration source id 6:<br /><textarea cols="40" id="inspiration_source_1_6" name="entry.1375352256" rows="3"></textarea><br />
+						Inspiration source id 7:<br /><textarea cols="40" id="inspiration_source_1_7" name="entry.1774926837" rows="3"></textarea><br />
+						Inspiration source id 8:<br /><textarea cols="40" id="inspiration_source_1_8" name="entry.640395032" rows="3"></textarea><br />
+						Inspiration source id 9:<br /><textarea cols="40" id="inspiration_source_1_9" name="entry.130655511" rows="3"></textarea><br />
+						Inspiration source id 10:<br /><textarea cols="40" id="inspiration_source_1_10" name="entry.1027911890" rows="3"></textarea><br />
 						More inspiration sources:<br /><textarea cols="40" id="more_inspiration_source_1" name="entry.477282171" rows="3"></textarea><br />
 						<br />
 						</td>
@@ -1268,157 +701,44 @@ function myTimerInspirationAnswer() {
 						</table>
 						</div>
 
-						<div id="inspiration_solutions_section2" style="display:block">
+						<div id="self_solutions_section1" style="display:block">
 						<table>
 						<tbody>
 						<tr style="border:2px solid #aaa;">
 						<td colspan="1" width="40%">
-						Solution 1:<br /><textarea cols="40" id="inspiration_solution_2_1" name="entry.1423585377" rows="3"></textarea><br />
-						Solution 2:<br /><textarea cols="40" id="inspiration_solution_2_2" name="entry.158703862" rows="3"></textarea><br />
-						Solution 3:<br /><textarea cols="40" id="inspiration_solution_2_3" name="entry.1736977919" rows="3"></textarea><br />
-						Solution 4:<br /><textarea cols="40" id="inspiration_solution_2_4" name="entry.448067832" rows="3"></textarea><br />
-						Solution 5:<br /><textarea cols="40" id="inspiration_solution_2_5" name="entry.1713344956" rows="3"></textarea><br />
-						Solution 6:<br /><textarea cols="40" id="inspiration_solution_2_6" name="entry.1962013824" rows="3"></textarea><br />
-						Solution 7:<br /><textarea cols="40" id="inspiration_solution_2_7" name="entry.1453671459" rows="3"></textarea><br />
-						Solution 8:<br /><textarea cols="40" id="inspiration_solution_2_8" name="entry.775149447" rows="3"></textarea><br />
-						Solution 9:<br /><textarea cols="40" id="inspiration_solution_2_9" name="entry.1962464238" rows="3"></textarea><br />
-						Solution 10:<br /><textarea cols="40" id="inspiration_solution_2_10" name="entry.1100930166" rows="3"></textarea><br />
-						More solutions:<br /><textarea cols="40" id="more_inspiration_solutions_2" name="entry.1595489579" rows="3"></textarea><br />
+						Solution 1:<br /><textarea cols="60" id="self_solution_1_1" name="entry.164619028" rows="3"></textarea><br />
+						Solution 2:<br /><textarea cols="60" id="self_solution_1_2" name="entry.255246931" rows="3"></textarea><br />
+						Solution 3:<br /><textarea cols="60" id="self_solution_1_3" name="entry.714652671" rows="3"></textarea><br />
+						Solution 4:<br /><textarea cols="60" id="self_solution_1_4" name="entry.936328001" rows="3"></textarea><br />
+						Solution 5:<br /><textarea cols="60" id="self_solution_1_5" name="entry.432462636" rows="3"></textarea><br />
+						Solution 6:<br /><textarea cols="60" id="self_solution_1_6" name="entry.1974457815" rows="3"></textarea><br />
+						Solution 7:<br /><textarea cols="60" id="self_solution_1_7" name="entry.49668693" rows="3"></textarea><br />
+						Solution 8:<br /><textarea cols="60" id="self_solution_1_8" name="entry.1248181641" rows="3"></textarea><br />
+						Solution 9:<br /><textarea cols="60" id="self_solution_1_9" name="entry.1443130783" rows="3"></textarea><br />
+						Solution 10:<br /><textarea cols="60" id="self_solution_1_10" name="entry.280309393" rows="3"></textarea><br />
+						More solutions:<br /><textarea cols="60" id="more_self_solutions_1" name="entry.1025646376" rows="3"></textarea><br />
 						<br />
 						</td>
-						<td id="explain_source_2" colspan="1" width="40%">
-						What inspired you 1:<br /><textarea cols="40" id="inspiration_explain_2_1" name="entry.620993049" rows="3"></textarea><br />
-						What inspired you 2:<br /><textarea cols="40" id="inspiration_explain_2_2" name="entry.589154739" rows="3"></textarea><br />
-						What inspired you 3:<br /><textarea cols="40" id="inspiration_explain_2_3" name="entry.1849447416" rows="3"></textarea><br />
-						What inspired you 4:<br /><textarea cols="40" id="inspiration_explain_2_4" name="entry.1406112787" rows="3"></textarea><br />
-						What inspired you 5:<br /><textarea cols="40" id="inspiration_explain_2_5" name="entry.2071674666" rows="3"></textarea><br />
-						What inspired you 6:<br /><textarea cols="40" id="inspiration_explain_2_6" name="entry.1282035097" rows="3"></textarea><br />
-						What inspired you 7:<br /><textarea cols="40" id="inspiration_explain_2_7" name="entry.1993992403" rows="3"></textarea><br />
-						What inspired you 8:<br /><textarea cols="40" id="inspiration_explain_2_8" name="entry.2039952965" rows="3"></textarea><br />
-						What inspired you 9:<br /><textarea cols="40" id="inspiration_explain_2_9" name="entry.1218251695" rows="3"></textarea><br />
-						What inspired you 10:<br /><textarea cols="40" id="inspiration_explain_2_10" name="entry.1119091941" rows="3"></textarea><br />
-						What inspired you - More:<br /><textarea cols="40" id="more_inspiration_explain_2" name="entry.1575119071" rows="3"></textarea><br />
-						<br />
-						</td>
-						<td id="specific_source_2" colspan="1" width="40%">
-						Specific inspiration source 1:<br /><textarea cols="40" id="inspiration_source_2_1" name="entry.158116779" rows="3"></textarea><br />
-						Specific inspiration source 2:<br /><textarea cols="40" id="inspiration_source_2_2" name="entry.1836231475" rows="3"></textarea><br />
-						Specific inspiration source 3:<br /><textarea cols="40" id="inspiration_source_2_3" name="entry.1364646014" rows="3"></textarea><br />
-						Specific inspiration source 4:<br /><textarea cols="40" id="inspiration_source_2_4" name="entry.194907121" rows="3"></textarea><br />
-						Specific inspiration source 5:<br /><textarea cols="40" id="inspiration_source_2_5" name="entry.1517964947" rows="3"></textarea><br />
-						Specific inspiration source 6:<br /><textarea cols="40" id="inspiration_source_2_6" name="entry.611445533" rows="3"></textarea><br />
-						Specific inspiration source 7:<br /><textarea cols="40" id="inspiration_source_2_7" name="entry.71377705" rows="3"></textarea><br />
-						Specific inspiration source 8:<br /><textarea cols="40" id="inspiration_source_2_8" name="entry.1706949008" rows="3"></textarea><br />
-						Specific inspiration source 9:<br /><textarea cols="40" id="inspiration_source_2_9" name="entry.1818574126" rows="3"></textarea><br />
-						Specific inspiration source 10:<br /><textarea cols="40" id="inspiration_source_2_10" name="entry.2058125365" rows="3"></textarea><br />
-						More inspiration sources:<br /><textarea cols="40" id="more_inspiration_source_2" name="entry.1201671621" rows="3"></textarea><br />
+						<td colspan="1" width="40%">
+						What inspired you 1:<br /><textarea cols="60" id="self_inspiration_explain_1_1" name="entry.1008899533" rows="3"></textarea><br />
+						What inspired you 2:<br /><textarea cols="60" id="self_inspiration_explain_1_2" name="entry.189345733" rows="3"></textarea><br />
+						What inspired you 3:<br /><textarea cols="60" id="self_inspiration_explain_1_3" name="entry.1620162062" rows="3"></textarea><br />
+						What inspired you 4:<br /><textarea cols="60" id="self_inspiration_explain_1_4" name="entry.335344347" rows="3"></textarea><br />
+						What inspired you 5:<br /><textarea cols="60" id="self_inspiration_explain_1_5" name="entry.681893091" rows="3"></textarea><br />
+						What inspired you 6:<br /><textarea cols="60" id="self_inspiration_explain_1_6" name="entry.1055968095" rows="3"></textarea><br />
+						What inspired you 7:<br /><textarea cols="60" id="self_inspiration_explain_1_7" name="entry.782925220" rows="3"></textarea><br />
+						What inspired you 8:<br /><textarea cols="60" id="self_inspiration_explain_1_8" name="entry.941382197" rows="3"></textarea><br />
+						What inspired you 9:<br /><textarea cols="60" id="self_inspiration_explain_1_9" name="entry.837215395" rows="3"></textarea><br />
+						What inspired you 10:<br /><textarea cols="60" id="self_inspiration_explain_1_10" name="entry.2022967023" rows="3"></textarea><br />
+						What inspired you - More:<br /><textarea cols="60" id="more_self_inspiration_explain_1" name="entry.1048140812" rows="3"></textarea><br />
 						<br />
 						</td>
 						</tr>
 						</tbody>
 						</table>
-						<br /></div>
+						<br />
+						</div>
 
-						<div id="inspiration_solutions_section3" style="display:block">
-						<table>
-						<tbody>
-						<tr style="border:2px solid #aaa;">
-						<td colspan="1" width="40%">
-						Solution 1:<br /><textarea cols="40" id="inspiration_solution_3_1" name="entry.1398453648" rows="3"></textarea><br />
-						Solution 2:<br /><textarea cols="40" id="inspiration_solution_3_2" name="entry.127689921" rows="3"></textarea><br />
-						Solution 3:<br /><textarea cols="40" id="inspiration_solution_3_3" name="entry.324257353" rows="3"></textarea><br />
-						Solution 4:<br /><textarea cols="40" id="inspiration_solution_3_4" name="entry.1379600317" rows="3"></textarea><br />
-						Solution 5:<br /><textarea cols="40" id="inspiration_solution_3_5" name="entry.2075358852" rows="3"></textarea><br />
-						Solution 6:<br /><textarea cols="40" id="inspiration_solution_3_6" name="entry.2075358852" rows="3"></textarea><br />
-						Solution 7:<br /><textarea cols="40" id="inspiration_solution_3_7" name="entry.1059496237" rows="3"></textarea><br />
-						Solution 8:<br /><textarea cols="40" id="inspiration_solution_3_8" name="entry.605078439" rows="3"></textarea><br />
-						Solution 9:<br /><textarea cols="40" id="inspiration_solution_3_9" name="entry.545300945" rows="3"></textarea><br />
-						Solution 10:<br /><textarea cols="40" id="inspiration_solution_3_10" name="entry.1065043202" rows="3"></textarea><br />
-						More solutions:<br /><textarea cols="40" id="more_inspiration_solutions_3" name="entry.776403806" rows="3"></textarea><br />
-						<br />
-						</td>
-						<td id="explain_source_3" colspan="1" width="40%">
-						What inspired you 1:<br /><textarea cols="40" id="inspiration_explain_3_1" name="entry.1310351689" rows="3"></textarea><br />
-						What inspired you 2:<br /><textarea cols="40" id="inspiration_explain_3_2" name="entry.1286701699" rows="3"></textarea><br />
-						What inspired you 3:<br /><textarea cols="40" id="inspiration_explain_3_3" name="entry.1288205381" rows="3"></textarea><br />
-						What inspired you 4:<br /><textarea cols="40" id="inspiration_explain_3_4" name="entry.736026483" rows="3"></textarea><br />
-						What inspired you 5:<br /><textarea cols="40" id="inspiration_explain_3_5" name="entry.498613237" rows="3"></textarea><br />
-						What inspired you 6:<br /><textarea cols="40" id="inspiration_explain_3_6" name="entry.148080435" rows="3"></textarea><br />
-						What inspired you 7:<br /><textarea cols="40" id="inspiration_explain_3_7" name="entry.1925460355" rows="3"></textarea><br />
-						What inspired you 8:<br /><textarea cols="40" id="inspiration_explain_3_8" name="entry.1665466144" rows="3"></textarea><br />
-						What inspired you 9:<br /><textarea cols="40" id="inspiration_explain_3_9" name="entry.1159374754" rows="3"></textarea><br />
-						What inspired you 10:<br /><textarea cols="40" id="inspiration_explain_3_10" name="entry.107454634" rows="3"></textarea><br />
-						What inspired you - More:<br /><textarea cols="40" id="more_inspiration_explain_3" name="entry.1357947638" rows="3"></textarea><br />
-						<br />
-						</td>
-						<td id="specific_source_3" colspan="1" width="40%">
-						Specific inspiration source 1:<br /><textarea cols="40" id="inspiration_source_3_1" name="entry.1129515883" rows="3"></textarea><br />
-						Specific inspiration source 2:<br /><textarea cols="40" id="inspiration_source_3_2" name="entry.1971223567" rows="3"></textarea><br />
-						Specific inspiration source 3:<br /><textarea cols="40" id="inspiration_source_3_3" name="entry.1139972654" rows="3"></textarea><br />
-						Specific inspiration source 4:<br /><textarea cols="40" id="inspiration_source_3_4" name="entry.62421433" rows="3"></textarea><br />
-						Specific inspiration source 5:<br /><textarea cols="40" id="inspiration_source_3_5" name="entry.957877207" rows="3"></textarea><br />
-						Specific inspiration source 6:<br /><textarea cols="40" id="inspiration_source_3_6" name="entry.1081742685" rows="3"></textarea><br />
-						Specific inspiration source 7:<br /><textarea cols="40" id="inspiration_source_3_7" name="entry.1949312245" rows="3"></textarea><br />
-						Specific inspiration source 8:<br /><textarea cols="40" id="inspiration_source_3_8" name="entry.2082903011" rows="3"></textarea><br />
-						Specific inspiration source 9:<br /><textarea cols="40" id="inspiration_source_3_9" name="entry.1189860746" rows="3"></textarea><br />
-						Specific inspiration source 10:<br /><textarea cols="40" id="inspiration_source_3_10" name="entry.593385539" rows="3"></textarea><br />
-						More inspiration sources:<br /><textarea cols="40" id="more_inspiration_source_3" name="entry.1358025894" rows="3"></textarea><br />
-						<br />
-						</td>
-						</tr>
-						</tbody>
-						</table>
-						<br /></div>
-						<div id="inspiration_solutions_section4" style="display:block">
-						<table>
-						<tbody>
-						<tr style="border:2px solid #aaa;">
-						<td colspan="1" width="40%">
-						Solution 1:<br /><textarea cols="40" id="inspiration_solution_4_1" name="entry.150727887" rows="3"></textarea><br />
-						Solution 2:<br /><textarea cols="40" id="inspiration_solution_4_2" name="entry.448734667" rows="3"></textarea><br />
-						Solution 3:<br /><textarea cols="40" id="inspiration_solution_4_3" name="entry.448734667" rows="3"></textarea><br />
-						Solution 4:<br /><textarea cols="40" id="inspiration_solution_4_4" name="entry.1040988065" rows="3"></textarea><br />
-						Solution 5:<br /><textarea cols="40" id="inspiration_solution_4_5" name="entry.1630487806" rows="3"></textarea><br />
-						Solution 6:<br /><textarea cols="40" id="inspiration_solution_4_6" name="entry.1431514755" rows="3"></textarea><br />
-						Solution 7:<br /><textarea cols="40" id="inspiration_solution_4_7" name="entry.1460807213" rows="3"></textarea><br />
-						Solution 8:<br /><textarea cols="40" id="inspiration_solution_4_8" name="entry.1735089011" rows="3"></textarea><br />
-						Solution 9:<br /><textarea cols="40" id="inspiration_solution_4_9" name="entry.1557303037" rows="3"></textarea><br />
-						Solution 10:<br /><textarea cols="40" id="inspiration_solution_4_10" name="entry.74085933" rows="3"></textarea><br />
-						More solutions:<br /><textarea cols="40" id="more_inspiration_solutions_4" name="entry.1850427552" rows="3"></textarea><br />
-						<br />
-						</td>
-						<td id="explain_source_4" colspan="1" width="40%">
-						What inspired you 1:<br /><textarea cols="40" id="inspiration_explain_4_1" name="entry.146377805" rows="3"></textarea><br />
-						What inspired you 2:<br /><textarea cols="40" id="inspiration_explain_4_2" name="entry.380745836" rows="3"></textarea><br />
-						What inspired you 3:<br /><textarea cols="40" id="inspiration_explain_4_3" name="entry.1012576561" rows="3"></textarea><br />
-						What inspired you 4:<br /><textarea cols="40" id="inspiration_explain_4_4" name="entry.1363160956" rows="3"></textarea><br />
-						What inspired you 5:<br /><textarea cols="40" id="inspiration_explain_4_5" name="entry.1192745262" rows="3"></textarea><br />
-						What inspired you 6:<br /><textarea cols="40" id="inspiration_explain_4_6" name="entry.331473375" rows="3"></textarea><br />
-						What inspired you 7:<br /><textarea cols="40" id="inspiration_explain_4_7" name="entry.184873415" rows="3"></textarea><br />
-						What inspired you 8:<br /><textarea cols="40" id="inspiration_explain_4_8" name="entry.267631941" rows="3"></textarea><br />
-						What inspired you 9:<br /><textarea cols="40" id="inspiration_explain_4_9" name="entry.346579060" rows="3"></textarea><br />
-						What inspired you 10:<br /><textarea cols="40" id="inspiration_explain_4_10" name="entry.1912827135" rows="3"></textarea><br />
-						What inspired you - More:<br /><textarea cols="40" id="more_inspiration_explain_4" name="entry.421107465" rows="3"></textarea><br />
-						<br />
-						</td>
-						<td id="specific_source_4" colspan="1" width="40%">
-						Specific inspiration source 1:<br /><textarea cols="40" id="inspiration_source_4_1" name="entry.278907064" rows="3"></textarea><br />
-						Specific inspiration source 2:<br /><textarea cols="40" id="inspiration_source_4_2" name="entry.70219883" rows="3"></textarea><br />
-						Specific inspiration source 3:<br /><textarea cols="40" id="inspiration_source_4_3" name="entry.1843021421" rows="3"></textarea><br />
-						Specific inspiration source 4:<br /><textarea cols="40" id="inspiration_source_4_4" name="entry.1281097209" rows="3"></textarea><br />
-						Specific inspiration source 5:<br /><textarea cols="40" id="inspiration_source_4_5" name="entry.1857439817" rows="3"></textarea><br />
-						Specific inspiration source 6:<br /><textarea cols="40" id="inspiration_source_4_6" name="entry.889836466" rows="3"></textarea><br />
-						Specific inspiration source 7:<br /><textarea cols="40" id="inspiration_source_4_7" name="entry.1542219235" rows="3"></textarea><br />
-						Specific inspiration source 8:<br /><textarea cols="40" id="inspiration_source_4_8" name="entry.266110332" rows="3"></textarea><br />
-						Specific inspiration source 9:<br /><textarea cols="40" id="inspiration_source_4_9" name="entry.262839888" rows="3"></textarea><br />
-						Specific inspiration source 10:<br /><textarea cols="40" id="inspiration_source_4_10" name="entry.260226089" rows="3"></textarea><br />
-						More inspiration sources:<br /><textarea cols="40" id="more_inspiration_source_4" name="entry.1342642650" rows="3"></textarea><br />
-						<br />
-						</td>
-						</tr>
-						</tbody>
-						</table>
-						<br /></div>
 						</div>
 						</td>
 					</tr>
@@ -1488,11 +808,11 @@ function myTimerInspirationAnswer() {
     padding-left:0px;
     padding-right:70px;
   }
-  
+
   p.uppercase {
     text-transform:uppercase;
   }
-  
+
   .numberCircle {
       -webkit-border-radius: 750px;
       -moz-border-radius: 750px;
@@ -1509,7 +829,7 @@ function myTimerInspirationAnswer() {
       font: 14px Arial, sans-serif;
 
   }
-  
+
   div.scrollable {
     width: 100%;
 	height: 500px;
@@ -1543,7 +863,7 @@ function myTimerInspirationAnswer() {
   white-space: normal;
 }
 .image{
-  margin-bottom: 15px; 
+  margin-bottom: 15px;
 }
 /* CSS for breaking long words/urls */
 .dont-break-out {
